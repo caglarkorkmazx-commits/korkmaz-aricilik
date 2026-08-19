@@ -9,7 +9,7 @@ export default function Home() {
         </div>
         
         <nav style={{ display: 'flex', gap: '30px', fontSize: '14px', letterSpacing: '1px' }}>
-          {['Anasayfa', 'Hakkımızda', 'Ana Arı Üretimi', 'Teknik Bilgiler', 'Galeri', 'İletişim'].map((item) => (
+          {['Anasayfa', 'Hakkımızda', 'Ana Arı Üretimi', 'Blog', 'Galeri', 'İletişim'].map((item) => (
             <span key={item} style={{ cursor: 'pointer', transition: '0.3s', color: item === 'Anasayfa' ? '#f59e0b' : '#aaa' }}>
               {item}
             </span>
@@ -19,7 +19,7 @@ export default function Home() {
       </header>
 
       {/* Hero / Ana Karşılama Alanı */}
-      <section style={{ position: 'relative', padding: '80px 20px', textAlign: 'center', overflow: 'hidden', borderBottom: '1px solid #222' }}>
+      <section style={{ padding: '80px 20px', textAlign: 'center', borderBottom: '1px solid #222' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
           <h1 style={{ fontSize: '52px', fontWeight: '800', marginBottom: '20px', lineHeight: '1.2' }}>
             Doğanın Kalbinden <br/> <span style={{ color: '#f59e0b' }}>Profesyonel Arıcılığa</span>
@@ -33,37 +33,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* YENİ: Fotoğraf Vitrini Bölümü (Siteyi dolduran galeri önizlemesi) */}
-      <section style={{ maxWidth: '1100px', margin: '60px auto', padding: '0 20px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '25px' }}>
-          <div>
-            <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>Üretimden Kareler</h2>
-            <p style={{ color: '#888', fontSize: '14px' }}>Arıcılık tesisimizden ve ana arı üretim süreçlerimizden görseller.</p>
-          </div>
-          <span style={{ color: '#f59e0b', cursor: 'pointer', fontSize: '14px', fontWeight: 'bold' }}>Tüm Galeri &rarr;</span>
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
-          {[
-            { title: 'Ana Arı Kafesi', sub: 'Özenle Seçilmiş Üretim' },
-            { title: 'Kovan Kontrolü', sub: 'Düzenli Bakım ve Takip' },
-            { title: 'Petek Dokusu', sub: 'Doğal ve Sağlıklı Gelişim' }
-          ].map((photo, index) => (
-            <div key={index} style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', borderRadius: '12px', overflow: 'hidden', height: '220px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '20px', position: 'relative' }}>
-              <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: '#222', zIndex: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#444', fontSize: '14px' }}>
-                [ Görsel {index + 1} ]
-              </div>
-              <div style={{ position: 'relative', zIndex: 1, background: 'rgba(0,0,0,0.6)', padding: '10px 14px', borderRadius: '8px', backdropFilter: 'blur(4px)' }}>
-                <h4 style={{ fontSize: '15px', color: '#fff', marginBottom: '4px' }}>{photo.title}</h4>
-                <p style={{ fontSize: '12px', color: '#aaa', margin: 0 }}>{photo.sub}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 3'lü Bilgi Kartları Bölümü */}
-      <section style={{ maxWidth: '1100px', margin: '0 auto 60px auto', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '25px', padding: '0 20px' }}>
+      {/* 3'lü Bilgi Kartları */}
+      <section style={{ maxWidth: '1100px', margin: '60px auto', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '25px', padding: '0 20px' }}>
         {[
           { title: 'Ana Arı Üretimi', desc: 'Yüksek verimli ve sağlıklı ana arı yetiştirme yöntemleri.' },
           { title: 'Koloni Yönetimi', desc: 'Güçlü ve sürdürülebilir koloniler için modern teknikler.' },
@@ -77,8 +48,66 @@ export default function Home() {
         ))}
       </section>
 
+      {/* GALERİ BÖLÜMÜ */}
+      <section style={{ maxWidth: '1100px', margin: '60px auto', padding: '0 20px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '25px' }}>
+          <div>
+            <h2 style={{ fontSize: '26px', fontWeight: 'bold', marginBottom: '8px' }}>Fotoğraf Galerisi</h2>
+            <p style={{ color: '#888', fontSize: '14px' }}>Üretim tesisimizden, kovanlarımızdan ve sahadan kareler.</p>
+          </div>
+          <span style={{ color: '#f59e0b', cursor: 'pointer', fontSize: '14px', fontWeight: 'bold' }}>Tümünü Gör &rarr;</span>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '15px' }}>
+          {[
+            { title: 'Ana Arı Kafesi', tag: 'Üretim' },
+            { title: 'Kovan Bakımı', tag: 'Saha' },
+            { title: 'Petek Dokusu', tag: 'Doğal' },
+            { title: 'Koloni Kontrolü', tag: 'Teknik' }
+          ].map((photo, index) => (
+            <div key={index} style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', borderRadius: '12px', height: '180px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '15px', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: '#1e1e1e', zIndex: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#555', fontSize: '13px' }}>
+                [ Fotoğraf {index + 1} ]
+              </div>
+              <div style={{ position: 'relative', zIndex: 1, background: 'rgba(0,0,0,0.7)', padding: '8px 12px', borderRadius: '6px' }}>
+                <span style={{ fontSize: '10px', color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '1px', display: 'block', marginBottom: '2px' }}>{photo.tag}</span>
+                <h4 style={{ fontSize: '13px', color: '#fff', margin: 0 }}>{photo.title}</h4>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* BLOG & TEKNİK NOTLAR BÖLÜMÜ */}
+      <section style={{ maxWidth: '1100px', margin: '60px auto', padding: '0 20px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '25px' }}>
+          <div>
+            <h2 style={{ fontSize: '26px', fontWeight: 'bold', marginBottom: '8px' }}>Arıcılık Blog & Teknik Notlar</h2>
+            <p style={{ color: '#888', fontSize: '14px' }}>Verimli üretim ve koloni sağlığı üzerine güncel yazılar.</p>
+          </div>
+          <span style={{ color: '#f59e0b', cursor: 'pointer', fontSize: '14px', fontWeight: 'bold' }}>Tüm Yazılar &rarr;</span>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
+          {[
+            { date: '19 Ağustos 2026', title: 'Ana Arı Kabul Ettirme Yöntemleri ve Püf Noktaları', excerpt: 'Kolonide yeni ana arının sorunsuz kabul edilmesi için dikkat edilmesi gereken kritik adımlar...' },
+            { date: '14 Ağustos 2026', title: 'Sezon Geçişlerinde Koloni Beslemesi Nasıl Yapılmalı?', excerpt: 'Arıların kışa güçlü ve sağlıklı hazırlanması için sonbahar bakım ve besleme stratejileri...' },
+            { date: '10 Ağustos 2026', title: 'Modern Arıcılıkta Kovan Yerleşimi ve Çevre Seçimi', excerpt: 'Doğru merada konumlandırılan kovanların bal verimine ve koloni gelişimine doğrudan etkileri...' }
+          ].map((blog, i) => (
+            <div key={i} style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '25px', borderRadius: '12px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div>
+                <span style={{ fontSize: '12px', color: '#f59e0b', display: 'block', marginBottom: '10px' }}>{blog.date}</span>
+                <h3 style={{ fontSize: '17px', lineHeight: '1.4', marginBottom: '12px', color: '#fff' }}>{blog.title}</h3>
+                <p style={{ fontSize: '13px', color: '#888', lineHeight: '1.5', marginBottom: '20px' }}>{blog.excerpt}</p>
+              </div>
+              <span style={{ color: '#fff', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>Devamını Oku &rarr;</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Footer */}
-      <footer style={{ textAlign: 'center', padding: '40px', color: '#555', fontSize: '13px', borderTop: '1px solid #222' }}>
+      <footer style={{ textAlign: 'center', padding: '40px', color: '#555', fontSize: '13px', borderTop: '1px solid #222', marginTop: '80px' }}>
         &copy; 2026 Korkmaz Arıcılık. Tüm hakları saklıdır.
       </footer>
     </div>
