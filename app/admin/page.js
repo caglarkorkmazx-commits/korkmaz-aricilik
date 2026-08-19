@@ -1,30 +1,35 @@
 'use client'
-import { useState } from 'react'
-import { supabase } from '../../utils/supabase'
+import { useState, useEffect } from 'react'
 
 export default function AdminPanel() {
   const [title, setTitle] = useState('')
   const [excerpt, setExcerpt] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [blogs, setBlogs] = useState([])
   const [message, setMessage] = useState('')
 
-  const handleAddBlog = async (e) => {
+  // Sayfa açıldığında kayıtlı blogları çekelim
+  useEffect(() => {
+    const savedBlogs = JSON.parse(localStorage.getItem('korkmaz_blogs')) || []
+    setBlogs(savedBlogs)
+  }, [])
+
+  const handleAddBlog = (e) => {
     e.preventDefault()
-    setLoading(true)
-    setMessage('')
-
-    const { error } = await supabase
-      .from('blogs')
-      .insert([{ title, excerpt, date: '19 Ağustos 2026' }])
-
-    setLoading(false)
-    if (error) {
-      setMessage('Hata oluştu: ' + error.message)
-    } else {
-      setMessage('Blog yazısı başarıyla eklendi!')
-      setTitle('')
-      setExcerpt('')
+    
+    const newBlog = {
+      id: Date.now(),
+      title,
+      excerpt,
+      date: '19 Ağustos 2026'
     }
+
+    const updatedBlogs = [newBlog, ...blogs]
+    setBlogs(updatedBlogs)
+    localStorage.setItem('korkmaz_blogs', JSON.stringify(updatedBlogs))
+
+    setMessage('Blog yazısı başarıyla eklendi!')
+    setTitle('')
+    setExcerpt('')
   }
 
   return (
@@ -34,7 +39,7 @@ export default function AdminPanel() {
         
         {message && <p style={{ padding: '10px', background: '#222', color: '#f59e0b', marginBottom: '15px', borderRadius: '6px' }}>{message}</p>}
 
-        <form onSubmit={handleAddBlog} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+        <form onSubmit={handleAddBlog} style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '30px' }}>
           <div>
             <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px', color: '#aaa' }}>Blog Başlığı</label>
             <input 
@@ -59,12 +64,13 @@ export default function AdminPanel() {
 
           <button 
             type="submit" 
-            disabled={loading}
             style={{ backgroundColor: '#f59e0b', color: '#000', padding: '12px', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}
           >
-            {loading ? 'Ekleniyor...' : 'Yazıyı Yayınla'}
+            Yazıyı Yayınla
           </button>
         </form>
+
+        <a href="/" style={{ color: '#f59e0b', fontSize: '14px', textDecoration: 'none' }}>&larr; Ana Sayfaya Dön</a>
       </div>
     </div>
   )
