@@ -71,7 +71,7 @@ export default function Home() {
           {/* Kutu 1 */}
           <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '25px', borderRadius: '12px', display: 'flex', flexDirection: 'column' }}>
             <h3 style={{ fontSize: '18px', color: '#f59e0b', marginBottom: '15px', fontWeight: 'bold', borderBottom: '1px solid #2b2b2b', paddingBottom: '10px' }}>
-              Ana Arı ( kraliçe ) satışı
+              Ana Arı ( Kraliçe ) Satışı
             </h3>
             <p style={{ color: '#aaa', fontSize: '13px', lineHeight: '1.6', margin: 0 }}>
               İlkbaharda Aydın-Nazilli, Antalya-Serik ve Amasya; yazın ise Erzincan Çayırlı’da üretim yapmaktayız. Nisan 20 civarı başlayan satışlarımız Ekim ayına kadar sürer. Tüm ana arılarımız F0 (saf) stoktan larva transferiyle F1 olarak üretilir. Tamamı doğuma geçmiş, olgunlaşmış analardır. Türkiye’nin tüm ilçelerine şubeye teslim gönderim sağlanır.
@@ -81,7 +81,7 @@ export default function Home() {
           {/* Kutu 2 */}
           <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '25px', borderRadius: '12px', display: 'flex', flexDirection: 'column' }}>
             <h3 style={{ fontSize: '18px', color: '#f59e0b', marginBottom: '15px', fontWeight: 'bold', borderBottom: '1px solid #2b2b2b', paddingBottom: '10px' }}>
-              Damızlık ana arı satışı
+              Damızlık Ana Arı Satışı
             </h3>
             <p style={{ color: '#aaa', fontSize: '13px', lineHeight: '1.6', margin: 0 }}>
               F0 damızlık arılardan özel izole bölgelerde yetiştirilen yüksek kaliteli damızlık arı satışımız mevcuttur. Aynı zamanda işletmeler ve ıslah çalışmaları için F0 (saf) damızlık ana arı tedariki de sağlamaktayız.
@@ -91,7 +91,7 @@ export default function Home() {
           {/* Kutu 3 */}
           <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '25px', borderRadius: '12px', display: 'flex', flexDirection: 'column' }}>
             <h3 style={{ fontSize: '18px', color: '#f59e0b', marginBottom: '15px', fontWeight: 'bold', borderBottom: '1px solid #2b2b2b', paddingBottom: '10px' }}>
-              paket & kovanlı arı satışı
+              Paket & Kovanlı Arı Satışı
             </h3>
             <p style={{ color: '#aaa', fontSize: '13px', lineHeight: '1.6', margin: 0 }}>
               Aydın-Nazilli, Antalya-Serik ve Amasya bölgesinde üretilen kovanlı veya paket arı satışımız vardır. Alım alt limiti yoktur. Şehirlere nakliye konusunda destek olunur. Satışlar önceden sipariş usulüyle Nisan-Mayıs aylarında gerçekleşir. Yüklü siparişler için önceden iletişime geçilmesi gerekmektedir.
@@ -101,7 +101,7 @@ export default function Home() {
           {/* Kutu 4 */}
           <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '25px', borderRadius: '12px', display: 'flex', flexDirection: 'column' }}>
             <h3 style={{ fontSize: '18px', color: '#f59e0b', marginBottom: '15px', fontWeight: 'bold', borderBottom: '1px solid #2b2b2b', paddingBottom: '10px' }}>
-              Bal üretimi
+              Bal Üretimi
             </h3>
             <p style={{ color: '#aaa', fontSize: '13px', lineHeight: '1.6', margin: 0 }}>
               Ana arı üretiminin doğal bir parçası olan yüksek kaliteli bal üretimimiz mevcuttur. Sahada elde ettiğimiz doğal ve katkısız ballarımızı genellikle Eylül ayı itibarıyla toptan olarak satışa sunmaktayız.
