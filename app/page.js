@@ -59,7 +59,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* HİZMETLERİMİZ BÖLÜMÜ (YAN YANA 4 KUTU) */}
+      {/* HİZMETLERİMİZ BÖLÜMÜ */}
       <section style={{ maxWidth: '1200px', margin: '60px auto', padding: '0 20px' }}>
         <div style={{ marginBottom: '35px', textAlign: 'center' }}>
           <h2 style={{ fontSize: '32px', fontWeight: 'bold', color: '#fff', marginBottom: '10px' }}>Hizmetlerimiz</h2>
@@ -68,44 +68,40 @@ export default function Home() {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
           
-          {/* Kutı 1: Ana Arı */}
+          {/* Kutu 1 */}
           <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '25px', borderRadius: '12px', display: 'flex', flexDirection: 'column' }}>
-            <div style={{ color: '#f59e0b', fontSize: '13px', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '8px' }}>01. Üretim</div>
-            <h3 style={{ fontSize: '18px', color: '#fff', marginBottom: '15px', fontWeight: 'bold', borderBottom: '1px solid #2b2b2b', paddingBottom: '10px' }}>
-              Ana Arı (Kraliçe)
+            <h3 style={{ fontSize: '18px', color: '#f59e0b', marginBottom: '15px', fontWeight: 'bold', borderBottom: '1px solid #2b2b2b', paddingBottom: '10px' }}>
+              Ana Arı ( kraliçe ) satışı
             </h3>
             <p style={{ color: '#aaa', fontSize: '13px', lineHeight: '1.6', margin: 0 }}>
               İlkbaharda Aydın-Nazilli, Antalya-Serik ve Amasya; yazın ise Erzincan Çayırlı’da üretim yapmaktayız. Nisan 20 civarı başlayan satışlarımız Ekim ayına kadar sürer. Tüm ana arılarımız F0 (saf) stoktan larva transferiyle F1 olarak üretilir. Tamamı doğuma geçmiş, olgunlaşmış analardır. Türkiye’nin tüm ilçelerine şubeye teslim gönderim sağlanır.
             </p>
           </div>
 
-          {/* Kutu 2: Damızlık Ana Arı */}
+          {/* Kutu 2 */}
           <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '25px', borderRadius: '12px', display: 'flex', flexDirection: 'column' }}>
-            <div style={{ color: '#f59e0b', fontSize: '13px', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '8px' }}>02. Genetik</div>
-            <h3 style={{ fontSize: '18px', color: '#fff', marginBottom: '15px', fontWeight: 'bold', borderBottom: '1px solid #2b2b2b', paddingBottom: '10px' }}>
-              Damızlık Ana Arı
+            <h3 style={{ fontSize: '18px', color: '#f59e0b', marginBottom: '15px', fontWeight: 'bold', borderBottom: '1px solid #2b2b2b', paddingBottom: '10px' }}>
+              Damızlık ana arı satışı
             </h3>
             <p style={{ color: '#aaa', fontSize: '13px', lineHeight: '1.6', margin: 0 }}>
               F0 damızlık arılardan özel izole bölgelerde yetiştirilen yüksek kaliteli damızlık arı satışımız mevcuttur. Aynı zamanda işletmeler ve ıslah çalışmaları için F0 (saf) damızlık ana arı tedariki de sağlamaktayız.
             </p>
           </div>
 
-          {/* Kutu 3: Paket & Kovanlı Arı */}
+          {/* Kutu 3 */}
           <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '25px', borderRadius: '12px', display: 'flex', flexDirection: 'column' }}>
-            <div style={{ color: '#f59e0b', fontSize: '13px', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '8px' }}>03. Koloni</div>
-            <h3 style={{ fontSize: '18px', color: '#fff', marginBottom: '15px', fontWeight: 'bold', borderBottom: '1px solid #2b2b2b', paddingBottom: '10px' }}>
-              Paket & Kovanlı Arı
+            <h3 style={{ fontSize: '18px', color: '#f59e0b', marginBottom: '15px', fontWeight: 'bold', borderBottom: '1px solid #2b2b2b', paddingBottom: '10px' }}>
+              paket & kovanlı arı satışı
             </h3>
             <p style={{ color: '#aaa', fontSize: '13px', lineHeight: '1.6', margin: 0 }}>
               Aydın-Nazilli, Antalya-Serik ve Amasya bölgesinde üretilen kovanlı veya paket arı satışımız vardır. Alım alt limiti yoktur. Şehirlere nakliye konusunda destek olunur. Satışlar önceden sipariş usulüyle Nisan-Mayıs aylarında gerçekleşir. Yüklü siparişler için önceden iletişime geçilmesi gerekmektedir.
             </p>
           </div>
 
-          {/* Kutu 4: Bal */}
+          {/* Kutu 4 */}
           <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '25px', borderRadius: '12px', display: 'flex', flexDirection: 'column' }}>
-            <div style={{ color: '#f59e0b', fontSize: '13px', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '8px' }}>04. Hasat</div>
-            <h3 style={{ fontSize: '18px', color: '#fff', marginBottom: '15px', fontWeight: 'bold', borderBottom: '1px solid #2b2b2b', paddingBottom: '10px' }}>
-              Bal Üretimi
+            <h3 style={{ fontSize: '18px', color: '#f59e0b', marginBottom: '15px', fontWeight: 'bold', borderBottom: '1px solid #2b2b2b', paddingBottom: '10px' }}>
+              Bal üretimi
             </h3>
             <p style={{ color: '#aaa', fontSize: '13px', lineHeight: '1.6', margin: 0 }}>
               Ana arı üretiminin doğal bir parçası olan yüksek kaliteli bal üretimimiz mevcuttur. Sahada elde ettiğimiz doğal ve katkısız ballarımızı genellikle Eylül ayı itibarıyla toptan olarak satışa sunmaktayız.
