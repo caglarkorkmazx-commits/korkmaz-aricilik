@@ -58,20 +58,37 @@ export default function Home() {
     else setSlideIndex(heroPhotos.length - 3)
   }
 
+  const navItems = [
+    { name: 'Anasayfa', href: '#anasayfa' },
+    { name: 'Hizmetlerimiz', href: '#hizmetlerimiz' },
+    { name: 'Hakkımızda', href: '#hakkimizda' },
+    { name: 'Galeri', href: '#galeri' },
+    { name: 'İletişim', href: '#iletisim' },
+  ]
+
   return (
-    <div style={{ backgroundColor: '#121212', color: '#ffffff', minHeight: '100vh', fontFamily: 'sans-serif' }}>
+    <div style={{ backgroundColor: '#121212', color: '#ffffff', minHeight: '100vh', fontFamily: 'sans-serif', scrollBehavior: 'smooth' }}>
       
-      {/* Header */}
-      <header style={{ padding: '30px 60px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #222' }}>
-        <div style={{ fontSize: '28px', fontWeight: 'bold', color: '#f59e0b', cursor: 'pointer' }}>
-          K<span style={{color: '#fff', fontSize: '18px', marginLeft: '5px'}}>ORKMAZ</span>
-        </div>
+      {/* Header / Navigasyon */}
+      <header style={{ position: 'sticky', top: 0, zIndex: 100, backgroundColor: 'rgba(18, 18, 18, 0.95)', backdropFilter: 'blur(8px)', padding: '20px 60px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #222' }}>
+        <a href="#anasayfa" style={{ fontSize: '28px', fontWeight: 'bold', color: '#f59e0b', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+          K<span style={{ color: '#fff', fontSize: '18px', marginLeft: '5px' }}>ORKMAZ</span>
+        </a>
         
         <nav style={{ display: 'flex', gap: '30px', fontSize: '14px', letterSpacing: '1px' }}>
-          {['Anasayfa', 'Hizmetlerimiz', 'Hakkımızda', 'Galeri', 'İletişim'].map((item) => (
-            <span key={item} style={{ cursor: 'pointer', transition: '0.3s', color: item === 'Anasayfa' ? '#f59e0b' : '#aaa' }}>
-              {item}
-            </span>
+          {navItems.map((item) => (
+            <a
+              key={item.name}
+              href={item.href}
+              style={{
+                textDecoration: 'none',
+                color: item.name === 'Anasayfa' ? '#f59e0b' : '#aaa',
+                transition: '0.3s',
+                fontWeight: '500'
+              }}
+            >
+              {item.name}
+            </a>
           ))}
         </nav>
         <a href="/admin" style={{ backgroundColor: '#222', border: '1px solid #444', color: '#f59e0b', padding: '8px 16px', borderRadius: '6px', fontSize: '13px', textDecoration: 'none', fontWeight: '600' }}>
@@ -80,7 +97,7 @@ export default function Home() {
       </header>
 
       {/* HERO SECTION + 3'LÜ AKAN FOTOĞRAF SLIDER */}
-      <section style={{ padding: '60px 20px 40px', textAlign: 'center', borderBottom: '1px solid #222', overflow: 'hidden' }}>
+      <section id="anasayfa" style={{ padding: '60px 20px 40px', textAlign: 'center', borderBottom: '1px solid #222', overflow: 'hidden' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto 40px' }}>
           <h1 style={{ fontSize: '48px', fontWeight: '800', marginBottom: '15px', lineHeight: '1.2' }}>
             Doğanın Kalbinden <br/> <span style={{ color: '#f59e0b' }}>Profesyonel Arıcılığa</span>
@@ -130,13 +147,13 @@ export default function Home() {
       </section>
 
       {/* HİZMETLERİMİZ BÖLÜMÜ */}
-      <section style={{ maxWidth: '1200px', margin: '60px auto', padding: '0 20px' }}>
+      <section id="hizmetlerimiz" style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 20px 40px' }}>
         <div style={{ marginBottom: '35px', textAlign: 'center' }}>
           <h2 style={{ fontSize: '32px', fontWeight: 'bold', color: '#fff', marginBottom: '10px' }}>Hizmetlerimiz</h2>
           <p style={{ color: '#888', fontSize: '15px' }}>Sektördeki tecrübemiz ve yüksek kalite standartlarımızla sunduğumuz çözümler.</p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
           
           <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '25px', borderRadius: '12px', display: 'flex', flexDirection: 'column' }}>
             <h3 style={{ fontSize: '18px', color: '#f59e0b', marginBottom: '15px', fontWeight: 'bold', borderBottom: '1px solid #2b2b2b', paddingBottom: '10px' }}>
@@ -177,16 +194,41 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Galeri Bölümü */}
-      <section style={{ maxWidth: '1200px', margin: '60px auto', padding: '0 20px' }}>
+      {/* HAKKIMIZDA BÖLÜMÜ */}
+      <section id="hakkimizda" style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 20px 40px', borderTop: '1px solid #222' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '40px', alignItems: 'center' }}>
+          <div>
+            <span style={{ fontSize: '12px', color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 'bold' }}>Hakkımızda</span>
+            <h2 style={{ fontSize: '32px', fontWeight: 'bold', color: '#fff', marginTop: '8px', marginBottom: '20px' }}>Geleneksel Tecrübe, Modern Arıcılık</h2>
+            <p style={{ color: '#aaa', fontSize: '14px', lineHeight: '1.7', marginBottom: '15px' }}>
+              Korkmaz Arıcılık olarak, yıllara dayanan saha tecrübemiz ve gezginci arıcılık anlayışımızla en yüksek verime sahip ırkların üretimini gerçekleştiriyoruz.
+            </p>
+            <p style={{ color: '#aaa', fontSize: '14px', lineHeight: '1.7' }}>
+              İlkbahardan sonbahara kadar Ege'den Doğu Anadolu'ya uzanan sahalarımızda hem yüksek kaliteli F1/F0 ana arı yetiştiriciliği yapıyor hem de saf bal üretimlerimizi sürdürüyoruz.
+            </p>
+          </div>
+          <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '30px', borderRadius: '12px' }}>
+            <h3 style={{ fontSize: '18px', color: '#f59e0b', marginBottom: '15px', fontWeight: 'bold' }}>Neden Korkmaz Arıcılık?</h3>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px', color: '#ccc', fontSize: '14px' }}>
+              <li>✓ <strong>Saf F0 Hatlar:</strong> Larva transferinde kontrollü damızlık kullanımı.</li>
+              <li>✓ <strong>Gezginci Saha Tecrübesi:</strong> Aydın, Antalya, Amasya ve Erzincan lokasyonları.</li>
+              <li>✓ <strong>Güvenli Nakliye:</strong> Türkiye'nin her yerine kargo ve şube teslimi.</li>
+              <li>✓ <strong>Sipariş Güvencesi:</strong> Müşteri memnuniyeti odaklı üretim ve teslimat.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* GALERİ BÖLÜMÜ */}
+      <section id="galeri" style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 20px 40px', borderTop: '1px solid #222' }}>
         <div style={{ marginBottom: '25px' }}>
           <h2 style={{ fontSize: '26px', fontWeight: 'bold', marginBottom: '8px' }}>Fotoğraf Galerisi</h2>
           <p style={{ color: '#888', fontSize: '14px' }}>Tesislerimizden ve saha çalışmalarımızdan görseller.</p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '15px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '15px' }}>
           {photos.map((photo) => (
-            <div key={photo.id} style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', borderRadius: '12px', height: '160px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '15px', position: 'relative', overflow: 'hidden' }}>
+            <div key={photo.id} style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', borderRadius: '12px', height: '180px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '15px', position: 'relative', overflow: 'hidden' }}>
               <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: '#1e1e1e', zIndex: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#555', fontSize: '12px' }}>
                 [ Görsel ]
               </div>
@@ -199,14 +241,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Bloglar Bölümü */}
-      <section style={{ maxWidth: '1200px', margin: '60px auto', padding: '0 20px' }}>
+      {/* BLOGLAR BÖLÜMÜ */}
+      <section style={{ maxWidth: '1200px', margin: '0 auto', padding: '60px 20px', borderTop: '1px solid #222' }}>
         <div style={{ marginBottom: '25px' }}>
           <h2 style={{ fontSize: '26px', fontWeight: 'bold', marginBottom: '8px' }}>Arıcılık Blog & Teknik Notlar</h2>
           <p style={{ color: '#888', fontSize: '14px' }}>Admin panelinden eklenen güncel yazılar.</p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
           {blogs.map((blog, i) => (
             <div key={blog.id || i} style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '25px', borderRadius: '12px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
@@ -220,10 +262,36 @@ export default function Home() {
         </div>
       </section>
 
+      {/* İLETİŞİM BÖLÜMÜ */}
+      <section id="iletisim" style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 20px', borderTop: '1px solid #222' }}>
+        <div style={{ textAlign: 'center', maxWidth: '700px', margin: '0 auto' }}>
+          <span style={{ fontSize: '12px', color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 'bold' }}>İletişim</span>
+          <h2 style={{ fontSize: '32px', fontWeight: 'bold', color: '#fff', marginTop: '8px', marginBottom: '15px' }}>Sipariş ve Bilgi Alın</h2>
+          <p style={{ color: '#888', fontSize: '15px', marginBottom: '35px' }}>Ana arı, kovanlı arı ve toptan bal siparişleriniz için bizimle doğrudan iletişime geçebilirsiniz.</p>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '30px' }}>
+            <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '20px', borderRadius: '10px' }}>
+              <div style={{ fontSize: '20px', marginBottom: '5px' }}>📍</div>
+              <h4 style={{ fontSize: '14px', color: '#f59e0b', margin: '0 0 5px 0' }}>Saha Konumu</h4>
+              <p style={{ fontSize: '13px', color: '#ccc', margin: 0 }}>Aydın & Nazilli / Türkiye</p>
+            </div>
+            <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '20px', borderRadius: '10px' }}>
+              <div style={{ fontSize: '20px', marginBottom: '5px' }}>📞</div>
+              <h4 style={{ fontSize: '14px', color: '#f59e0b', margin: '0 0 5px 0' }}>Telefon</h4>
+              <p style={{ fontSize: '13px', color: '#ccc', margin: 0 }}>İletişim Numarası</p>
+            </div>
+          </div>
+
+          <a href="https://wa.me/905000000000" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', backgroundColor: '#f59e0b', color: '#000', padding: '12px 30px', borderRadius: '8px', fontWeight: 'bold', textDecoration: 'none', fontSize: '15px' }}>
+            💬 WhatsApp İle İletişime Geç
+          </a>
+        </div>
+      </section>
+
       {/* Footer */}
-      <footer style={{ textAlign: 'center', padding: '40px', color: '#555', fontSize: '13px', borderTop: '1px solid #222', marginTop: '80px' }}>
+      <footer style={{ textAlign: 'center', padding: '40px', color: '#555', fontSize: '13px', borderTop: '1px solid #222', marginTop: '40px' }}>
         &copy; 2026 Korkmaz Arıcılık. Tüm hakları saklıdır.
       </footer>
     </div>
-  );
+  )
 }
