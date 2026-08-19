@@ -1,10 +1,11 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { supabase } from '../lib/supabase'
 
 export default function Home() {
   const [blogs, setBlogs] = useState([
-    { date: '19 Ağustos 2026', title: 'Ana Arı Kabul Ettirme Yöntemleri ve Püf Noktaları', excerpt: 'Kolonide yeni ana arının sorunsuz kabul edilmesi için dikkat edilmesi gereken kritik adımlar...' },
-    { date: '14 Ağustos 2026', title: 'Sezon Geçişlerinde Koloni Beslemesi Nasıl Yapılmalı?', excerpt: 'Arıların kışa güçlü ve sağlıklı hazırlanması için sonbahar bakım ve besleme stratejileri...' }
+    { id: 1, date: '19 Ağustos 2026', title: 'Ana Arı Kabul Ettirme Yöntemleri ve Püf Noktaları', excerpt: 'Kolonide yeni ana arının sorunsuz kabul edilmesi için dikkat edilmesi gereken kritik adımlar...' },
+    { id: 2, date: '14 Ağustos 2026', title: 'Sezon Geçişlerinde Koloni Beslemesi Nasıl Yapılmalı?', excerpt: 'Arıların kışa güçlü ve sağlıklı hazırlanması için sonbahar bakım ve besleme stratejileri...' }
   ])
 
   const [photos, setPhotos] = useState([
@@ -25,15 +26,17 @@ export default function Home() {
 
   const [slideIndex, setSlideIndex] = useState(0)
 
+  // Supabase Verilerini Çekme
   useEffect(() => {
-    const savedBlogs = JSON.parse(localStorage.getItem('korkmaz_blogs'))
-    if (savedBlogs && savedBlogs.length > 0) setBlogs(prev => [...savedBlogs, ...prev])
+    const fetchSupabaseData = async () => {
+      const { data: bData } = await supabase.from('blogs').select('*').order('id', { ascending: false })
+      const { data: hData } = await supabase.from('hero_photos').select('*').order('id', { ascending: false })
 
-    const savedPhotos = JSON.parse(localStorage.getItem('korkmaz_photos'))
-    if (savedPhotos && savedPhotos.length > 0) setPhotos(savedPhotos)
+      if (bData && bData.length > 0) setBlogs(bData)
+      if (hData && hData.length > 0) setHeroPhotos(hData)
+    }
 
-    const savedHero = JSON.parse(localStorage.getItem('korkmaz_hero_photos'))
-    if (savedHero && savedHero.length > 0) setHeroPhotos(savedHero)
+    fetchSupabaseData()
   }, [])
 
   // Otomatik Slider Akışı (Her 3.5 saniyede bir kayar)
@@ -205,7 +208,7 @@ export default function Home() {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
           {blogs.map((blog, i) => (
-            <div key={i} style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '25px', borderRadius: '12px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div key={blog.id || i} style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '25px', borderRadius: '12px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
                 <span style={{ fontSize: '12px', color: '#f59e0b', display: 'block', marginBottom: '10px' }}>{blog.date}</span>
                 <h3 style={{ fontSize: '17px', lineHeight: '1.4', marginBottom: '12px', color: '#fff' }}>{blog.title}</h3>
