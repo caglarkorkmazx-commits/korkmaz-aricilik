@@ -14,17 +14,46 @@ export default function Home() {
     { id: 4, title: 'Koloni Kontrolü', tag: 'Teknik' }
   ])
 
+  // Hero Slider Fotoğrafları
+  const [heroPhotos, setHeroPhotos] = useState([
+    { id: 1, title: 'Aydın Nazilli Sahası', url: 'https://images.unsplash.com/photo-1587049352847-4a222e784d38?auto=format&fit=crop&w=600&q=80' },
+    { id: 2, title: 'F0 Larva Transferi', url: 'https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=600&q=80' },
+    { id: 3, title: 'Erzincan Çayırlı Hasadı', url: 'https://images.unsplash.com/photo-1473081556163-2a17de81fc97?auto=format&fit=crop&w=600&q=80' },
+    { id: 4, title: 'Kovan Kontrolü & Islah', url: 'https://images.unsplash.com/photo-1587049352851-8d4e89133924?auto=format&fit=crop&w=600&q=80' },
+    { id: 5, title: 'Paket Arı Hazırlığı', url: 'https://images.unsplash.com/photo-1527661591475-527312dd65f5?auto=format&fit=crop&w=600&q=80' }
+  ])
+
+  const [slideIndex, setSlideIndex] = useState(0)
+
   useEffect(() => {
     const savedBlogs = JSON.parse(localStorage.getItem('korkmaz_blogs'))
-    if (savedBlogs && savedBlogs.length > 0) {
-      setBlogs(prev => [...savedBlogs, ...prev])
-    }
+    if (savedBlogs && savedBlogs.length > 0) setBlogs(prev => [...savedBlogs, ...prev])
 
     const savedPhotos = JSON.parse(localStorage.getItem('korkmaz_photos'))
-    if (savedPhotos && savedPhotos.length > 0) {
-      setPhotos(savedPhotos)
-    }
+    if (savedPhotos && savedPhotos.length > 0) setPhotos(savedPhotos)
+
+    const savedHero = JSON.parse(localStorage.getItem('korkmaz_hero_photos'))
+    if (savedHero && savedHero.length > 0) setHeroPhotos(savedHero)
   }, [])
+
+  // Otomatik Slider Akışı (Her 3.5 saniyede bir kayar)
+  useEffect(() => {
+    if (heroPhotos.length <= 3) return
+    const timer = setInterval(() => {
+      setSlideIndex((prev) => (prev + 1) % (heroPhotos.length - 2))
+    }, 3500)
+    return () => clearInterval(timer)
+  }, [heroPhotos])
+
+  const nextSlide = () => {
+    if (slideIndex < heroPhotos.length - 3) setSlideIndex(slideIndex + 1)
+    else setSlideIndex(0)
+  }
+
+  const prevSlide = () => {
+    if (slideIndex > 0) setSlideIndex(slideIndex - 1)
+    else setSlideIndex(heroPhotos.length - 3)
+  }
 
   return (
     <div style={{ backgroundColor: '#121212', color: '#ffffff', minHeight: '100vh', fontFamily: 'sans-serif' }}>
@@ -47,15 +76,53 @@ export default function Home() {
         </a>
       </header>
 
-      {/* Hero */}
-      <section style={{ padding: '80px 20px', textAlign: 'center', borderBottom: '1px solid #222' }}>
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          <h1 style={{ fontSize: '52px', fontWeight: '800', marginBottom: '20px', lineHeight: '1.2' }}>
+      {/* HERO SECTION + 3'LÜ AKAN FOTOĞRAF SLIDER */}
+      <section style={{ padding: '60px 20px 40px', textAlign: 'center', borderBottom: '1px solid #222', overflow: 'hidden' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto 40px' }}>
+          <h1 style={{ fontSize: '48px', fontWeight: '800', marginBottom: '15px', lineHeight: '1.2' }}>
             Doğanın Kalbinden <br/> <span style={{ color: '#f59e0b' }}>Profesyonel Arıcılığa</span>
           </h1>
-          <p style={{ fontSize: '18px', color: '#aaa', marginBottom: '30px', lineHeight: '1.6' }}>
+          <p style={{ fontSize: '16px', color: '#aaa', lineHeight: '1.6', margin: 0 }}>
             Bilgi ve tecrübe ile en kaliteli ana arı üretimi. Koloni yönetimi ve modern arıcılık çözümleriyle sektöre değer katıyoruz.
           </p>
+        </div>
+
+        {/* 3'LÜ SLIDER ALANI */}
+        <div style={{ maxWidth: '1100px', margin: '0 auto', position: 'relative' }}>
+          
+          {/* Sol / Sağ Ok Butonları */}
+          <button onClick={prevSlide} style={{ position: 'absolute', left: '-15px', top: '45%', zIndex: 10, background: 'rgba(0,0,0,0.7)', color: '#f59e0b', border: '1px solid #444', borderRadius: '50%', width: '40px', height: '40px', cursor: 'pointer', fontSize: '18px' }}>&#10094;</button>
+          <button onClick={nextSlide} style={{ position: 'absolute', right: '-15px', top: '45%', zIndex: 10, background: 'rgba(0,0,0,0.7)', color: '#f59e0b', border: '1px solid #444', borderRadius: '50%', width: '40px', height: '40px', cursor: 'pointer', fontSize: '18px' }}>&#10095;</button>
+
+          {/* Slider Penceresi */}
+          <div style={{ overflow: 'hidden', width: '100%' }}>
+            <div style={{
+              display: 'flex',
+              gap: '20px',
+              transition: 'transform 0.6s ease-in-out',
+              transform: `translateX(-${slideIndex * (100 / 3 + 1.33)}%)`
+            }}>
+              {heroPhotos.map((item) => (
+                <div key={item.id} style={{
+                  flex: '0 0 calc(33.333% - 14px)',
+                  height: '220px',
+                  borderRadius: '12px',
+                  backgroundImage: `url(${item.url})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  border: '1px solid #333',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  alignItems: 'flex-end'
+                }}>
+                  <div style={{ width: '100%', background: 'linear-gradient(transparent, rgba(0,0,0,0.85))', padding: '12px', textAlign: 'left' }}>
+                    <span style={{ fontSize: '12px', color: '#f59e0b', fontWeight: 'bold' }}>{item.title}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -68,17 +135,15 @@ export default function Home() {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
           
-          {/* Kutu 1 */}
           <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '25px', borderRadius: '12px', display: 'flex', flexDirection: 'column' }}>
             <h3 style={{ fontSize: '18px', color: '#f59e0b', marginBottom: '15px', fontWeight: 'bold', borderBottom: '1px solid #2b2b2b', paddingBottom: '10px' }}>
-              Ana Arı ( Kraliçe ) Satışı
+              Ana Arı ( kraliçe ) Satışı
             </h3>
             <p style={{ color: '#aaa', fontSize: '13px', lineHeight: '1.6', margin: 0 }}>
               İlkbaharda Aydın-Nazilli, Antalya-Serik ve Amasya; yazın ise Erzincan Çayırlı’da üretim yapmaktayız. Nisan 20 civarı başlayan satışlarımız Ekim ayına kadar sürer. Tüm ana arılarımız F0 (saf) stoktan larva transferiyle F1 olarak üretilir. Tamamı doğuma geçmiş, olgunlaşmış analardır. Türkiye’nin tüm ilçelerine şubeye teslim gönderim sağlanır.
             </p>
           </div>
 
-          {/* Kutu 2 */}
           <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '25px', borderRadius: '12px', display: 'flex', flexDirection: 'column' }}>
             <h3 style={{ fontSize: '18px', color: '#f59e0b', marginBottom: '15px', fontWeight: 'bold', borderBottom: '1px solid #2b2b2b', paddingBottom: '10px' }}>
               Damızlık Ana Arı Satışı
@@ -88,7 +153,6 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Kutu 3 */}
           <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '25px', borderRadius: '12px', display: 'flex', flexDirection: 'column' }}>
             <h3 style={{ fontSize: '18px', color: '#f59e0b', marginBottom: '15px', fontWeight: 'bold', borderBottom: '1px solid #2b2b2b', paddingBottom: '10px' }}>
               Paket & Kovanlı Arı Satışı
@@ -98,7 +162,6 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Kutu 4 */}
           <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '25px', borderRadius: '12px', display: 'flex', flexDirection: 'column' }}>
             <h3 style={{ fontSize: '18px', color: '#f59e0b', marginBottom: '15px', fontWeight: 'bold', borderBottom: '1px solid #2b2b2b', paddingBottom: '10px' }}>
               Bal Üretimi
