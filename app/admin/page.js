@@ -1,118 +1,218 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { supabase } from '../../lib/supabase'
+import { supabase } from '../lib/supabase'
 
-export default function AdminPanel() {
-  const [title, setTitle] = useState('')
-  const [excerpt, setExcerpt] = useState('')
-  const [blogs, setBlogs] = useState([])
-
+export default function Admin() {
   const [heroTitle, setHeroTitle] = useState('')
   const [heroUrl, setHeroUrl] = useState('')
+  const [heroFile, setHeroFile] = useState(null)
+  const [uploading, setUploading] = useState(false)
   const [heroPhotos, setHeroPhotos] = useState([])
 
-  const [message, setMessage] = useState('')
+  const [blogTitle, setBlogTitle] = useState('')
+  const [blogExcerpt, setBlogExcerpt] = useState('')
+  const [blogs, setBlogs] = useState([])
 
   useEffect(() => {
     fetchData()
   }, [])
 
   const fetchData = async () => {
-    const { data: bData } = await supabase.from('blogs').select('*').order('id', { ascending: false })
     const { data: hData } = await supabase.from('hero_photos').select('*').order('id', { ascending: false })
+    const { data: bData } = await supabase.from('blogs').select('*').order('id', { ascending: false })
 
-    if (bData) setBlogs(bData)
     if (hData) setHeroPhotos(hData)
+    if (bData) setBlogs(bData)
   }
 
-  // Hero Slider Fotoğraf Ekle / Sil
-  const handleAddHeroPhoto = async (e) => {
+  const handleAddPhoto = async (e) => {
     e.preventDefault()
+    if (!heroTitle) return alert('Lütfen bir başlık girin.')
+
+    let finalImageUrl = heroUrl
+
+    // Cihazdan dosya seçildiyse Supabase Storage'a yükle
+    if (heroFile) {
+      setUploading(true)
+      const fileExt = heroFile.name.split('.').pop()
+      const fileName = `${Date.now()}.${fileExt}`
+      const filePath = `hero/${fileName}`
+
+      const { error: uploadError } = await supabase.storage
+        .from('hero-images')
+        .upload(filePath, heroFile)
+
+      if (uploadError) {
+        alert('Fotoğraf yüklenirken hata oluştu: ' + uploadError.message)
+        setUploading(false)
+        return
+      }
+
+      const { data: urlData } = supabase.storage
+        .from('hero-images')
+        .getPublicUrl(filePath)
+
+      finalImageUrl = urlData.publicUrl
+    }
+
+    if (!finalImageUrl) {
+      setUploading(false)
+      return alert('Lütfen bir dosya seçin veya görsel URL\'si girin.')
+    }
+
+    // Veritabanına kaydet
     const { error } = await supabase.from('hero_photos').insert([
-      { title: heroTitle, url: heroUrl || 'https://images.unsplash.com/photo-1587049352847-4a222e784d38?auto=format&fit=crop&w=600&q=80' }
+      { title: heroTitle, url: finalImageUrl }
     ])
-    if (!error) {
-      setMessage('Hero Slider fotoğrafı veritabanına eklendi!')
-      setHeroTitle(''); setHeroUrl('')
+
+    if (error) {
+      alert('Veritabanına eklenirken hata: ' + error.message)
+    } else {
+      setHeroTitle('')
+      setHeroUrl('')
+      setHeroFile(null)
+      const fileInput = document.getElementById('hero-file-input')
+      if (fileInput) fileInput.value = ''
       fetchData()
     }
+    setUploading(false)
   }
 
-  const handleDeleteHeroPhoto = async (id) => {
-    await supabase.from('hero_photos').delete().eq('id', id)
-    fetchData()
+  const handleDeletePhoto = async (id) => {
+    const { error } = await supabase.from('hero_photos').delete().eq('id', id)
+    if (!error) fetchData()
   }
 
-  // Blog Ekle / Sil
   const handleAddBlog = async (e) => {
     e.preventDefault()
-    const { error } = await supabase.from('blogs').insert([{ title, excerpt }])
+    if (!blogTitle || !blogExcerpt) return alert('Tüm alanları doldurun.')
+
+    const dateStr = new Date().toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })
+    const { error } = await supabase.from('blogs').insert([
+      { title: blogTitle, excerpt: blogExcerpt, date: dateStr }
+    ])
+
     if (!error) {
-      setMessage('Blog yazısı veritabanına eklendi!')
-      setTitle(''); setExcerpt('')
+      setBlogTitle('')
+      setBlogExcerpt('')
       fetchData()
     }
   }
 
   const handleDeleteBlog = async (id) => {
-    await supabase.from('blogs').delete().eq('id', id)
-    fetchData()
+    const { error } = await supabase.from('blogs').delete().eq('id', id)
+    if (!error) fetchData()
   }
 
   return (
-    <div style={{ backgroundColor: '#121212', color: '#fff', minHeight: '100vh', padding: '40px', fontFamily: 'sans-serif' }}>
-      <div style={{ maxWidth: '750px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '30px' }}>
+    <div style={{ backgroundColor: '#121212', color: '#ffffff', minHeight: '100vh', fontFamily: 'sans-serif', padding: '40px 20px' }}>
+      <header style={{ maxWidth: '800px', margin: '0 auto 30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#f59e0b' }}>Korkmaz Arıcılık - Canlı Yönetim Paneli</h1>
+        <a href="/" style={{ color: '#aaa', textDecoration: 'none', fontSize: '14px' }}>&larr; Siteye Dön</a>
+      </header>
+
+      <main style={{ maxWidth: '800px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '30px' }}>
         
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h1 style={{ color: '#f59e0b', fontSize: '24px' }}>Korkmaz Arıcılık - Canlı Yönetim Paneli</h1>
-          <a href="/" style={{ color: '#aaa', fontSize: '14px', textDecoration: 'none' }}>&larr; Siteye Dön</a>
-        </div>
+        {/* HERO SLIDER FOTOĞRAFLARI */}
+        <section style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', borderRadius: '12px', padding: '25px' }}>
+          <h2 style={{ fontSize: '18px', fontWeight: 'bold', color: '#f59e0b', marginBottom: '20px' }}>Hero Slider Fotoğrafları (Akan Kısım)</h2>
+          
+          <form onSubmit={handleAddPhoto} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+            <input
+              type="text"
+              placeholder="Başlık / Etiket (Örn: Nazilli Sahası)"
+              value={heroTitle}
+              onChange={(e) => setHeroTitle(e.target.value)}
+              style={{ width: '100%', padding: '12px', backgroundColor: '#222', border: '1px solid #444', borderRadius: '6px', color: '#fff', fontSize: '14px', outline: 'none' }}
+            />
 
-        {message && <p style={{ padding: '12px', background: '#222', color: '#f59e0b', borderRadius: '6px', border: '1px solid #444' }}>{message}</p>}
+            <div>
+              <label style={{ display: 'block', fontSize: '13px', color: '#aaa', marginBottom: '6px' }}>Cihazdan Dosya Seçin:</label>
+              <input
+                id="hero-file-input"
+                type="file"
+                accept="image/*"
+                onChange={(e) => setHeroFile(e.target.files[0])}
+                style={{ width: '100%', padding: '10px', backgroundColor: '#222', border: '1px solid #444', borderRadius: '6px', color: '#fff', fontSize: '13px' }}
+              />
+            </div>
 
-        {/* HERO SLIDER YÖNETİMİ */}
-        <div style={{ background: '#1a1a1a', padding: '25px', borderRadius: '12px', border: '1px solid #333' }}>
-          <h2 style={{ fontSize: '18px', marginBottom: '15px', color: '#f59e0b' }}>Hero Slider Fotoğrafları (Akan Kısım)</h2>
-          <form onSubmit={handleAddHeroPhoto} style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px' }}>
-            <input type="text" value={heroTitle} onChange={(e) => setHeroTitle(e.target.value)} required placeholder="Başlık / Etiket (Örn: Nazilli Sahası)" style={{ width: '100%', padding: '10px', background: '#222', border: '1px solid #444', color: '#fff', borderRadius: '6px' }} />
-            <input type="text" value={heroUrl} onChange={(e) => setHeroUrl(e.target.value)} placeholder="Görsel URL'si (Opsiyonel)" style={{ width: '100%', padding: '10px', background: '#222', border: '1px solid #444', color: '#fff', borderRadius: '6px' }} />
-            <button type="submit" style={{ backgroundColor: '#f59e0b', color: '#000', padding: '10px', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>
-              Veritabanına Fotoğraf Ekle
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', color: '#777', marginBottom: '4px' }}>Veya Dış Görsel URL'si (Opsiyonel):</label>
+              <input
+                type="text"
+                placeholder="https://..."
+                value={heroUrl}
+                onChange={(e) => setHeroUrl(e.target.value)}
+                style={{ width: '100%', padding: '10px', backgroundColor: '#222', border: '1px solid #333', borderRadius: '6px', color: '#aaa', fontSize: '13px', outline: 'none' }}
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={uploading}
+              style={{ backgroundColor: uploading ? '#b47808' : '#f59e0b', color: '#000', border: 'none', padding: '12px', borderRadius: '6px', fontWeight: 'bold', cursor: uploading ? 'wait' : 'pointer', fontSize: '14px', marginTop: '10px' }}
+            >
+              {uploading ? 'Fotoğraf Yükleniyor...' : 'Veritabanına Fotoğraf Ekle'}
             </button>
           </form>
 
-          <h3 style={{ fontSize: '14px', marginBottom: '10px', color: '#ccc' }}>Kayıtlı Görseller ({heroPhotos.length})</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '180px', overflowY: 'auto' }}>
-            {heroPhotos.map((item) => (
-              <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#222', padding: '8px 12px', borderRadius: '6px' }}>
-                <span style={{ fontSize: '13px' }}>{item.title}</span>
-                <button onClick={() => handleDeleteHeroPhoto(item.id)} style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '11px' }}>Sil</button>
-              </div>
-            ))}
+          <div style={{ marginTop: '25px' }}>
+            <h3 style={{ fontSize: '14px', color: '#aaa', marginBottom: '10px' }}>Kayıtlı Görseller ({heroPhotos.length})</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {heroPhotos.map((photo) => (
+                <div key={photo.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#222', padding: '10px 15px', borderRadius: '6px', border: '1px solid #333' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <img src={photo.url} alt={photo.title} style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px' }} />
+                    <span style={{ fontSize: '14px' }}>{photo.title}</span>
+                  </div>
+                  <button onClick={() => handleDeletePhoto(photo.id)} style={{ backgroundColor: '#dc2626', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}>Sil</button>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        </section>
 
-        {/* BLOG YÖNETİMİ */}
-        <div style={{ background: '#1a1a1a', padding: '25px', borderRadius: '12px', border: '1px solid #333' }}>
-          <h2 style={{ fontSize: '18px', marginBottom: '15px', color: '#fff' }}>Yeni Blog Ekle</h2>
-          <form onSubmit={handleAddBlog} style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px' }}>
-            <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Blog Başlığı" required style={{ width: '100%', padding: '10px', background: '#222', border: '1px solid #444', color: '#fff', borderRadius: '6px' }} />
-            <textarea value={excerpt} onChange={(e) => setExcerpt(e.target.value)} placeholder="Kısa Özet" required rows="2" style={{ width: '100%', padding: '10px', background: '#222', border: '1px solid #444', color: '#fff', borderRadius: '6px' }} />
-            <button type="submit" style={{ backgroundColor: '#f59e0b', color: '#000', padding: '10px', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>Yayınla</button>
+        {/* YENİ BLOG EKLE */}
+        <section style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', borderRadius: '12px', padding: '25px' }}>
+          <h2 style={{ fontSize: '18px', fontWeight: 'bold', color: '#fff', marginBottom: '20px' }}>Yeni Blog Ekle</h2>
+          <form onSubmit={handleAddBlog} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+            <input
+              type="text"
+              placeholder="Blog Başlığı"
+              value={blogTitle}
+              onChange={(e) => setBlogTitle(e.target.value)}
+              style={{ width: '100%', padding: '12px', backgroundColor: '#222', border: '1px solid #444', borderRadius: '6px', color: '#fff', fontSize: '14px', outline: 'none' }}
+            />
+            <textarea
+              placeholder="Kısa özet"
+              rows="3"
+              value={blogExcerpt}
+              onChange={(e) => setBlogExcerpt(e.target.value)}
+              style={{ width: '100%', padding: '12px', backgroundColor: '#222', border: '1px solid #444', borderRadius: '6px', color: '#fff', fontSize: '14px', outline: 'none', resize: 'vertical' }}
+            />
+            <button type="submit" style={{ backgroundColor: '#f59e0b', color: '#000', border: 'none', padding: '12px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '14px' }}>
+              Yayınla
+            </button>
           </form>
 
-          <h3 style={{ fontSize: '14px', marginBottom: '10px', color: '#ccc' }}>Mevcut Bloglar ({blogs.length})</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '180px', overflowY: 'auto' }}>
-            {blogs.map((item) => (
-              <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#222', padding: '8px 12px', borderRadius: '6px' }}>
-                <span style={{ fontSize: '13px' }}>{item.title}</span>
-                <button onClick={() => handleDeleteBlog(item.id)} style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '11px' }}>Sil</button>
-              </div>
-            ))}
+          <div style={{ marginTop: '25px' }}>
+            <h3 style={{ fontSize: '14px', color: '#aaa', marginBottom: '10px' }}>Mevcut Bloglar ({blogs.length})</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {blogs.map((blog) => (
+                <div key={blog.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#222', padding: '10px 15px', borderRadius: '6px', border: '1px solid #333' }}>
+                  <div>
+                    <div style={{ fontSize: '14px', fontWeight: 'bold' }}>{blog.title}</div>
+                    <div style={{ fontSize: '12px', color: '#888' }}>{blog.date}</div>
+                  </div>
+                  <button onClick={() => handleDeleteBlog(blog.id)} style={{ backgroundColor: '#dc2626', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}>Sil</button>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        </section>
 
-      </div>
+      </main>
     </div>
   )
 }
