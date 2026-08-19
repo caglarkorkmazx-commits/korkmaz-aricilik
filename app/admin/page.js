@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { supabase } from '../lib/supabase'
+import { supabase } from '@/lib/supabase'
 
 export default function Admin() {
   const [heroTitle, setHeroTitle] = useState('')
@@ -31,7 +31,6 @@ export default function Admin() {
 
     let finalImageUrl = heroUrl
 
-    // Cihazdan dosya seçildiyse Supabase Storage'a yükle
     if (heroFile) {
       setUploading(true)
       const fileExt = heroFile.name.split('.').pop()
@@ -60,7 +59,6 @@ export default function Admin() {
       return alert('Lütfen bir dosya seçin veya görsel URL\'si girin.')
     }
 
-    // Veritabanına kaydet
     const { error } = await supabase.from('hero_photos').insert([
       { title: heroTitle, url: finalImageUrl }
     ])
