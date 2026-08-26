@@ -25,6 +25,7 @@ export default function Home() {
 
   const [slideIndex, setSlideIndex] = useState(0)
   const [isMobile, setIsMobile] = useState(false)
+  const [selectedBlog, setSelectedBlog] = useState(null)
 
   useEffect(() => {
     const checkMobile = () => {
@@ -83,6 +84,7 @@ export default function Home() {
     { name: 'Hizmetlerimiz', href: '#hizmetlerimiz' },
     { name: 'Hakkımızda', href: '#hakkimizda' },
     { name: 'Galeri', href: '#galeri' },
+    { name: 'Bloglar', href: '#blog' },
     { name: 'İletişim', href: '#iletisim' },
   ]
 
@@ -336,25 +338,85 @@ export default function Home() {
         </div>
       </section>
 
-      <section style={{ maxWidth: '1200px', margin: '0 auto', padding: '60px 20px', borderTop: '1px solid #222' }}>
+      {/* DÜZENLENEN BLOG SEKSİYONU */}
+      <section id="blog" style={{ maxWidth: '1200px', margin: '0 auto', padding: '60px 20px', borderTop: '1px solid #222' }}>
         <div style={{ marginBottom: '25px' }}>
           <h2 style={{ fontSize: '26px', fontWeight: 'bold', marginBottom: '8px' }}>Arıcılık Blog & Rehber</h2>
           <p style={{ color: '#888', fontSize: '14px' }}>Belfast ana arı bakımı ve koloni yönetimi üzerine teknik notlar.</p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
           {blogs.map((blog, i) => (
-            <div key={blog.id || i} style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '25px', borderRadius: '12px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <div>
-                <span style={{ fontSize: '12px', color: '#f59e0b', display: 'block', marginBottom: '10px' }}>{blog.date}</span>
-                <h3 style={{ fontSize: '17px', lineHeight: '1.4', marginBottom: '12px', color: '#fff' }}>{blog.title}</h3>
-                <p style={{ fontSize: '13px', color: '#888', lineHeight: '1.5', marginBottom: '20px' }}>{blog.excerpt}</p>
+            <article 
+              key={blog.id || i} 
+              style={{ 
+                backgroundColor: '#1a1a1a', 
+                border: '1px solid #333', 
+                borderRadius: '12px', 
+                overflow: 'hidden', 
+                display: 'flex', 
+                flexDirection: 'column', 
+                justify: 'space-between' 
+              }}
+            >
+              {blog.image_url && (
+                <img 
+                  src={blog.image_url} 
+                  alt={blog.title} 
+                  style={{ width: '100%', height: '180px', objectFit: 'cover' }} 
+                />
+              )}
+              <div style={{ padding: '20px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <div>
+                  <span style={{ fontSize: '12px', color: '#f59e0b', display: 'block', marginBottom: '8px' }}>{blog.date}</span>
+                  <h3 style={{ fontSize: '17px', lineHeight: '1.4', marginBottom: '10px', color: '#fff', fontWeight: 'bold' }}>{blog.title}</h3>
+                  <p style={{ 
+                    fontSize: '13px', 
+                    color: '#888', 
+                    lineHeight: '1.6', 
+                    marginBottom: '20px',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 3,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden'
+                  }}>
+                    {blog.excerpt}
+                  </p>
+                </div>
+                <button
+                  onClick={() => setSelectedBlog(blog)}
+                  style={{ background: 'none', border: 'none', color: '#f59e0b', fontSize: '13px', fontWeight: '600', cursor: 'pointer', textAlign: 'left', padding: 0 }}
+                >
+                  Devamını Oku &rarr;
+                </button>
               </div>
-              <span style={{ color: '#f59e0b', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>Devamını Oku &rarr;</span>
-            </div>
+            </article>
           ))}
         </div>
       </section>
+
+      {/* POP-UP MODAL (DEVAMINI OKU PENCERESİ) */}
+      {selectedBlog && (
+        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.85)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '20px' }}>
+          <div style={{ backgroundColor: '#1e1e1e', maxWidth: '700px', width: '100%', maxHeight: '85vh', borderRadius: '12px', overflowY: 'auto', border: '1px solid #333', padding: '30px', position: 'relative' }}>
+            <button
+              onClick={() => setSelectedBlog(null)}
+              style={{ position: 'absolute', top: '15px', right: '15px', background: '#333', color: '#fff', border: 'none', borderRadius: '50%', width: '32px', height: '32px', cursor: 'pointer', fontSize: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            >
+              ✕
+            </button>
+
+            {selectedBlog.image_url && (
+              <img src={selectedBlog.image_url} alt={selectedBlog.title} style={{ width: '100%', maxHeight: '320px', objectFit: 'cover', borderRadius: '8px', marginBottom: '20px' }} />
+            )}
+            <span style={{ fontSize: '12px', color: '#f59e0b', display: 'block', marginBottom: '8px' }}>{selectedBlog.date}</span>
+            <h2 style={{ fontSize: '22px', color: '#fff', marginBottom: '20px', lineHeight: '1.4' }}>{selectedBlog.title}</h2>
+            <div style={{ color: '#ccc', fontSize: '14px', lineHeight: '1.8', whiteSpace: 'pre-line' }}>
+              {selectedBlog.excerpt}
+            </div>
+          </div>
+        </div>
+      )}
 
       <section id="iletisim" style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 20px', borderTop: '1px solid #222' }}>
         <div style={{ textAlign: 'center', maxWidth: '700px', margin: '0 auto' }}>
