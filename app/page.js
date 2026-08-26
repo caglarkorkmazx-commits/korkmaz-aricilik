@@ -174,10 +174,6 @@ export default function Home() {
               </a>
             ))}
           </nav>
-
-          <a href="/admin" style={{ backgroundColor: '#222', border: '1px solid #444', color: '#f59e0b', padding: '8px 16px', borderRadius: '6px', fontSize: '13px', textDecoration: 'none', fontWeight: '600' }}>
-            Admin Paneli
-          </a>
         </div>
       </header>
 
@@ -338,7 +334,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* DÜZENLENEN BLOG SEKSİYONU */}
       <section id="blog" style={{ maxWidth: '1200px', margin: '0 auto', padding: '60px 20px', borderTop: '1px solid #222' }}>
         <div style={{ marginBottom: '25px' }}>
           <h2 style={{ fontSize: '26px', fontWeight: 'bold', marginBottom: '8px' }}>Arıcılık Blog & Rehber</h2>
@@ -395,7 +390,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* POP-UP MODAL (DEVAMINI OKU PENCERESİ) */}
       {selectedBlog && (
         <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.85)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '20px' }}>
           <div style={{ backgroundColor: '#1e1e1e', maxWidth: '700px', width: '100%', maxHeight: '85vh', borderRadius: '12px', overflowY: 'auto', border: '1px solid #333', padding: '30px', position: 'relative' }}>
