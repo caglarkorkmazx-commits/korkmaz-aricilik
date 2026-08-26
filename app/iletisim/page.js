@@ -19,7 +19,7 @@ export default function IletisimPage() {
           <h3 style={{ fontSize: '18px', color: '#f59e0b', margin: '0 0 8px 0' }}>Üretim Sahalarımız</h3>
           <p style={{ color: '#ccc', fontSize: '14px', margin: 0, lineHeight: '1.5' }}>
             Aydın / Nazilli <br />
-            Erzincan / Çayırlı
+            Erzincan / Çayırlı <br />
               Amasya
           </p>
         </div>
