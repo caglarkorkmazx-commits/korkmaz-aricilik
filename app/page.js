@@ -1,27 +1,34 @@
+İstediğin telefon numarası (**+90 535 846 82 99**) doğrudan WhatsApp butonuna ve iletişim alanına bağlandı. Ayrıca belirttiğin **Belfast ana arı satışı**, **organik doğal bal**, **Erzincan bal satışı**, **arı satın al** gibi hedef SEO kelimeleri metinlere, başlıklara ve Google botlarının siteyi tararken okuduğu **JSON-LD (Schema Structured Data)** veri yapısına doğal bir şekilde yedirildi.
+
+Bu sayede Google botları siteyi ziyaret ettiğinde doğrudan bu anahtar kelimelerle indeksleme yapacaktır.
+
+İşte kopyalayıp direkt `app/page.js` dosyasına yapıştırabileceğin **eksiksiz kod**:
+
+```jsx
 'use client'
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 
 export default function Home() {
   const [blogs, setBlogs] = useState([
-    { id: 1, date: '19 Ağustos 2026', title: 'Ana Arı Kabul Ettirme Yöntemleri ve Püf Noktaları', excerpt: 'Kolonide yeni ana arının sorunsuz kabul edilmesi için dikkat edilmesi gereken kritik adımlar...' },
-    { id: 2, date: '14 Ağustos 2026', title: 'Sezon Geçişlerinde Koloni Beslemesi Nasıl Yapılmalı?', excerpt: 'Arıların kışa güçlü ve sağlıklı hazırlanması için sonbahar bakım ve besleme stratejileri...' }
+    { id: 1, date: '19 Ağustos 2026', title: 'Belfast Ana Arı Kabul Ettirme Yöntemleri ve Püf Noktaları', excerpt: 'Kolonide yeni Belfast ana arının sorunsuz kabul edilmesi için dikkat edilmesi gereken kritik adımlar ve bakımlar...' },
+    { id: 2, date: '14 Ağustos 2026', title: 'Erzincan Yayla Balı ve Organik Doğal Bal Hasadı', excerpt: 'Erzincan Çayırlı bölgesinde üretilen organik doğal bal özelliklerimiz ve sezon geçişlerinde koloni besleme stratejileri...' }
   ])
 
   const [photos, setPhotos] = useState([
-    { id: 1, title: 'Ana Arı Kafesi', tag: 'Üretim' },
-    { id: 2, title: 'Kovan Bakımı', tag: 'Saha' },
-    { id: 3, title: 'Petek Dokusu', tag: 'Doğal' },
-    { id: 4, title: 'Koloni Kontrolü', tag: 'Teknik' }
+    { id: 1, title: 'Belfast Ana Arı Üretimi', tag: 'Üretim' },
+    { id: 2, title: 'Kovan Bakımı & Arı Satışı', tag: 'Saha' },
+    { id: 3, title: 'Organik Petek Dokusu', tag: 'Doğal' },
+    { id: 4, title: 'Erzincan Bal Hasadı', tag: 'Teknik' }
   ])
 
   // Hero Slider Fotoğrafları
   const [heroPhotos, setHeroPhotos] = useState([
-    { id: 1, title: 'Aydın Nazilli Sahası', url: 'https://images.unsplash.com/photo-1587049352847-4a222e784d38?auto=format&fit=crop&w=600&q=80' },
-    { id: 2, title: 'F0 Larva Transferi', url: 'https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=600&q=80' },
-    { id: 3, title: 'Erzincan Çayırlı Hasadı', url: 'https://images.unsplash.com/photo-1473081556163-2a17de81fc97?auto=format&fit=crop&w=600&q=80' },
-    { id: 4, title: 'Kovan Kontrolü & Islah', url: 'https://images.unsplash.com/photo-1587049352851-8d4e89133924?auto=format&fit=crop&w=600&q=80' },
-    { id: 5, title: 'Paket Arı Hazırlığı', url: 'https://images.unsplash.com/photo-1527661591475-527312dd65f5?auto=format&fit=crop&w=600&q=80' }
+    { id: 1, title: 'Aydın Nazilli Arıcılık Sahası', url: 'https://images.unsplash.com/photo-1587049352847-4a222e784d38?auto=format&fit=crop&w=600&q=80' },
+    { id: 2, title: 'Belfast & Karniyol F0 Larva Transferi', url: 'https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=600&q=80' },
+    { id: 3, title: 'Erzincan Çayırlı Bal Satışı & Hasat', url: 'https://images.unsplash.com/photo-1473081556163-2a17de81fc97?auto=format&fit=crop&w=600&q=80' },
+    { id: 4, title: 'Kovan Kontrolü & Damızlık Arı', url: 'https://images.unsplash.com/photo-1587049352851-8d4e89133924?auto=format&fit=crop&w=600&q=80' },
+    { id: 5, title: 'Paket Arı Satın Al & Hazırlık', url: 'https://images.unsplash.com/photo-1527661591475-527312dd65f5?auto=format&fit=crop&w=600&q=80' }
   ])
 
   const [slideIndex, setSlideIndex] = useState(0)
@@ -58,7 +65,6 @@ export default function Home() {
   const visibleCount = isMobile ? 1 : 3
   const maxIndex = Math.max(0, heroPhotos.length - visibleCount)
 
-  // Ekran Değiştiğinde Index Taşmasını Önleme
   useEffect(() => {
     if (slideIndex > maxIndex) {
       setSlideIndex(maxIndex)
@@ -90,10 +96,31 @@ export default function Home() {
     { name: 'İletişim', href: '#iletisim' },
   ]
 
+  // Google SEO için Schema.org Yapısal Verisi (JSON-LD)
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Korkmaz Arıcılık - Belfast Ana Arı & Bal Satışı",
+    "description": "Belfast ana arı satışı, organik doğal bal, Erzincan bal satışı ve paket arı satın al hizmetleri. Aydın ve Erzincan sahalarımızla hizmetinizdeyiz.",
+    "telephone": "+905358468299",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Aydın / Erzincan",
+      "addressCountry": "TR"
+    },
+    "keywords": "belfast ana arı satışı, organik doğal bal, erzincan bal satışı, arı satın al, damızlık ana arı, paket arı satışı"
+  }
+
   return (
     <div style={{ backgroundColor: '#121212', color: '#ffffff', minHeight: '100vh', fontFamily: 'sans-serif', scrollBehavior: 'smooth' }}>
       
-      {/* Mobil ve Duyarlı Görünüm İçi Özel CSS */}
+      {/* Google SEO Yapısal Veri (JSON-LD) */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+      />
+
+      {/* Stil Düzenlemeleri */}
       <style jsx global>{`
         html { scroll-behavior: smooth; }
         .header-container {
@@ -103,7 +130,7 @@ export default function Home() {
           justify-content: space-between;
         }
         .hero-title {
-          font-size: 48px;
+          font-size: 46px;
         }
         .slider-track {
           display: flex;
@@ -127,7 +154,7 @@ export default function Home() {
             gap: 15px !important;
           }
           .hero-title {
-            font-size: 30px !important;
+            font-size: 28px !important;
           }
           .slider-card {
             flex: 0 0 100%;
@@ -166,21 +193,20 @@ export default function Home() {
         </div>
       </header>
 
-      {/* HERO SECTION + AKAN FOTOĞRAF SLIDER */}
+      {/* HERO SECTION (SEO ODAKLI BAŞLIKLAR VE SLIDER) */}
       <section id="anasayfa" style={{ padding: '60px 20px 40px', textAlign: 'center', borderBottom: '1px solid #222', overflow: 'hidden' }}>
-        <div style={{ maxWidth: '800px', margin: '0 auto 40px' }}>
+        <div style={{ maxWidth: '850px', margin: '0 auto 40px' }}>
           <h1 className="hero-title" style={{ fontWeight: '800', marginBottom: '15px', lineHeight: '1.2' }}>
-            Doğanın Kalbinden <br/> <span style={{ color: '#f59e0b' }}>Profesyonel Arıcılığa</span>
+            Belfast Ana Arı Satışı & <br/> <span style={{ color: '#f59e0b' }}>Organik Doğal Bal Üretimi</span>
           </h1>
           <p style={{ fontSize: '16px', color: '#aaa', lineHeight: '1.6', margin: 0 }}>
-            Bilgi ve tecrübe ile en kaliteli ana arı üretimi. Koloni yönetimi ve modern arıcılık çözümleriyle sektöre değer katıyoruz.
+            Aydın ve Erzincan sahalarımızda yüksek verimli <strong>Belfast ana arı satışı</strong>, <strong>paket arı satın al</strong> imkanları ve katkısız <strong>Erzincan bal satışı</strong> ile Türkiye’nin her yerine güvenli gönderim sağlıyoruz.
           </p>
         </div>
 
         {/* SLIDER ALANI */}
         <div style={{ maxWidth: '1100px', margin: '0 auto', position: 'relative' }}>
           
-          {/* Sol / Sağ Ok Butonları */}
           {heroPhotos.length > visibleCount && (
             <>
               <button 
@@ -200,7 +226,6 @@ export default function Home() {
             </>
           )}
 
-          {/* Slider Penceresi */}
           <div style={{ overflow: 'hidden', width: '100%', borderRadius: '12px' }}>
             <div 
               className="slider-track"
@@ -234,30 +259,30 @@ export default function Home() {
         </div>
       </section>
 
-      {/* HİZMETLERİMİZ BÖLÜMÜ */}
+      {/* HİZMETLERİMİZ BÖLÜMÜ (SEO KELİMELERİ EKLENDİ) */}
       <section id="hizmetlerimiz" style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 20px 40px' }}>
         <div style={{ marginBottom: '35px', textAlign: 'center' }}>
-          <h2 style={{ fontSize: '32px', fontWeight: 'bold', color: '#fff', marginBottom: '10px' }}>Hizmetlerimiz</h2>
-          <p style={{ color: '#888', fontSize: '15px' }}>Sektördeki tecrübemiz ve yüksek kalite standartlarımızla sunduğumuz çözümler.</p>
+          <h2 style={{ fontSize: '32px', fontWeight: 'bold', color: '#fff', marginBottom: '10px' }}>Hizmetlerimiz ve Ürünlerimiz</h2>
+          <p style={{ color: '#888', fontSize: '15px' }}>Belfast ana arı yetiştiriciliği, paket arı satışı ve Erzincan yaylalarından doğal arı ürünleri.</p>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
           
           <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '25px', borderRadius: '12px', display: 'flex', flexDirection: 'column' }}>
             <h3 style={{ fontSize: '18px', color: '#f59e0b', marginBottom: '15px', fontWeight: 'bold', borderBottom: '1px solid #2b2b2b', paddingBottom: '10px' }}>
-              Ana Arı ( kraliçe ) Satışı
+              Belfast Ana Arı Satışı
             </h3>
             <p style={{ color: '#aaa', fontSize: '13px', lineHeight: '1.6', margin: 0 }}>
-              İlkbaharda Aydın-Nazilli, Antalya-Serik ve Amasya; yazın ise Erzincan Çayırlı’da üretim yapmaktayız. Nisan 20 civarı başlayan satışlarımız Ekim ayına kadar sürer. Tüm ana arılarımız F0 (saf) stoktan larva transferiyle F1 olarak üretilir. Tamamı doğuma geçmiş, olgunlaşmış analardır. Türkiye’nin tüm ilçelerine şubeye teslim gönderim sağlanır.
+              İlkbaharda Aydın-Nazilli, Antalya-Serik ve Amasya; yazın ise Erzincan Çayırlı’da yüksek performanslı <strong>Belfast ana arı satışı</strong> yapılmaktadır. F0 saf stoktan üretilen F1 Belfast analarımız yumurta verimi ve sakinliği ile öne çıkar. Türkiye’nin tüm ilçelerine kargo teslimi yapılır.
             </p>
           </div>
 
           <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '25px', borderRadius: '12px', display: 'flex', flexDirection: 'column' }}>
             <h3 style={{ fontSize: '18px', color: '#f59e0b', marginBottom: '15px', fontWeight: 'bold', borderBottom: '1px solid #2b2b2b', paddingBottom: '10px' }}>
-              Damızlık Ana Arı Satışı
+              Damızlık Arı & Arı Satın Al
             </h3>
             <p style={{ color: '#aaa', fontSize: '13px', lineHeight: '1.6', margin: 0 }}>
-              F0 damızlık arılardan özel izole bölgelerde yetiştirilen yüksek kaliteli damızlık arı satışımız mevcuttur. Aynı zamanda işletmeler ve ıslah çalışmaları için F0 (saf) damızlık ana arı tedariki de sağlamaktayız.
+              Kolonisini güçlendirmek isteyen arıcılar için F0 damızlık hatlar ve hazır koloni çözümleri sunuyoruz. Güvenilir kanallardan hızlıca <strong>arı satın al</strong> taleplerinizi Nisan-Mayıs döneminde ön sipariş ile karşılıyoruz.
             </p>
           </div>
 
@@ -266,16 +291,16 @@ export default function Home() {
               Paket & Kovanlı Arı Satışı
             </h3>
             <p style={{ color: '#aaa', fontSize: '13px', lineHeight: '1.6', margin: 0 }}>
-              Aydın-Nazilli, Antalya-Serik ve Amasya bölgesinde üretilen kovanlı veya paket arı satışımız vardır. Alım alt limiti yoktur. Şehirlere nakliye konusunda destek olunur. Satışlar önceden sipariş usulüyle Nisan-Mayıs aylarında gerçekleşir. Yüklü siparişler için önceden iletişime geçilmesi gerekmektedir.
+              Aydın ve Amasya bölgesinde üretilen 5, 7 ve 9 çıtalı kovanlı arı veya <strong>paket arı satışı</strong> seçeneklerimiz mevcuttur. Şehirlere nakliye desteğimizle toplu arı alımlarında avantaj sağlıyoruz.
             </p>
           </div>
 
           <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '25px', borderRadius: '12px', display: 'flex', flexDirection: 'column' }}>
             <h3 style={{ fontSize: '18px', color: '#f59e0b', marginBottom: '15px', fontWeight: 'bold', borderBottom: '1px solid #2b2b2b', paddingBottom: '10px' }}>
-              Bal Üretimi
+              Erzincan Bal Satışı (Organik Doğal Bal)
             </h3>
             <p style={{ color: '#aaa', fontSize: '13px', lineHeight: '1.6', margin: 0 }}>
-              Ana arı üretiminin doğal bir parçası olan yüksek kaliteli bal üretimimiz mevcuttur. Sahada elde ettiğimiz doğal ve katkısız ballarımızı genellikle Eylül ayı itibarıyla toptan olarak satışa sunmaktayız.
+              Erzincan Çayırlı yüksek yaylalarından elde ettiğimiz <strong>organik doğal bal</strong> çeşitlerimizi Eylül ayı itibarıyla süzme ve petek olarak sunuyoruz. Toptan ve perakende <strong>Erzincan bal satışı</strong> için hemen iletişime geçebilirsiniz.
             </p>
           </div>
 
@@ -289,19 +314,19 @@ export default function Home() {
             <span style={{ fontSize: '12px', color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 'bold' }}>Hakkımızda</span>
             <h2 style={{ fontSize: '32px', fontWeight: 'bold', color: '#fff', marginTop: '8px', marginBottom: '20px' }}>Geleneksel Tecrübe, Modern Arıcılık</h2>
             <p style={{ color: '#aaa', fontSize: '14px', lineHeight: '1.7', marginBottom: '15px' }}>
-              Korkmaz Arıcılık olarak, yıllara dayanan saha tecrübemiz ve gezginci arıcılık anlayışımızla en yüksek verime sahip ırkların üretimini gerçekleştiriyoruz.
+              Korkmaz Arıcılık olarak, yıllara dayanan gezginci arıcılık tecrübemizle en yüksek verimli <strong>Belfast ana arı</strong> üretimi yapıyoruz.
             </p>
             <p style={{ color: '#aaa', fontSize: '14px', lineHeight: '1.7' }}>
-              İlkbahardan sonbahara kadar Ege'den Doğu Anadolu'ya uzanan sahalarımızda hem yüksek kaliteli F1/F0 ana arı yetiştiriciliği yapıyor hem de saf bal üretimlerimizi sürdürüyoruz.
+              Ege'den Doğu Anadolu'ya uzanan sahalarımızda hem yüksek kaliteli F1/F0 damızlık yetiştiriyor hem de <strong>organik doğal bal</strong> üretimi ile arıcılık sektörüne katkı sağlıyoruz.
             </p>
           </div>
           <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '30px', borderRadius: '12px' }}>
             <h3 style={{ fontSize: '18px', color: '#f59e0b', marginBottom: '15px', fontWeight: 'bold' }}>Neden Korkmaz Arıcılık?</h3>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px', color: '#ccc', fontSize: '14px' }}>
-              <li>✓ <strong>Saf F0 Hatlar:</strong> Larva transferinde kontrollü damızlık kullanımı.</li>
-              <li>✓ <strong>Gezginci Saha Tecrübesi:</strong> Aydın, Antalya, Amasya ve Erzincan lokasyonları.</li>
-              <li>✓ <strong>Güvenli Nakliye:</strong> Türkiye'nin her yerine kargo ve şube teslimi.</li>
-              <li>✓ <strong>Sipariş Güvencesi:</strong> Müşteri memnuniyeti odaklı üretim ve teslimat.</li>
+              <li>✓ <strong>Saf Belfast F0 Hatlar:</strong> Larva transferinde yüksek standartlı damızlık kullanımı.</li>
+              <li>✓ <strong>Gezginci Saha Tecrübesi:</strong> Aydın, Antalya, Amasya ve Erzincan yaylaları.</li>
+              <li>✓ <strong>Organik Doğal Bal Güvencesi:</strong> Katkısız Erzincan balı üretimi.</li>
+              <li>✓ <strong>Güvenli Nakliye:</strong> Türkiye'nin her yerine özel şube teslim kargo.</li>
             </ul>
           </div>
         </div>
@@ -311,7 +336,7 @@ export default function Home() {
       <section id="galeri" style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 20px 40px', borderTop: '1px solid #222' }}>
         <div style={{ marginBottom: '25px' }}>
           <h2 style={{ fontSize: '26px', fontWeight: 'bold', marginBottom: '8px' }}>Fotoğraf Galerisi</h2>
-          <p style={{ color: '#888', fontSize: '14px' }}>Tesislerimizden ve saha çalışmalarımızdan görseller.</p>
+          <p style={{ color: '#888', fontSize: '14px' }}>Tesislerimizden, ana arı üretim alanlarımızdan ve bal hasadından görseller.</p>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '15px' }}>
@@ -332,8 +357,8 @@ export default function Home() {
       {/* BLOGLAR BÖLÜMÜ */}
       <section style={{ maxWidth: '1200px', margin: '0 auto', padding: '60px 20px', borderTop: '1px solid #222' }}>
         <div style={{ marginBottom: '25px' }}>
-          <h2 style={{ fontSize: '26px', fontWeight: 'bold', marginBottom: '8px' }}>Arıcılık Blog & Teknik Notlar</h2>
-          <p style={{ color: '#888', fontSize: '14px' }}>Admin panelinden eklenen güncel yazılar.</p>
+          <h2 style={{ fontSize: '26px', fontWeight: 'bold', marginBottom: '8px' }}>Arıcılık Blog & Rehber</h2>
+          <p style={{ color: '#888', fontSize: '14px' }}>Belfast ana arı bakımı ve koloni yönetimi üzerine teknik notlar.</p>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
@@ -350,28 +375,30 @@ export default function Home() {
         </div>
       </section>
 
-      {/* İLETİŞİM BÖLÜMÜ */}
+      {/* İLETİŞİM BÖLÜMÜ (WHATSAPP + Numaralar Güncellendi) */}
       <section id="iletisim" style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 20px', borderTop: '1px solid #222' }}>
         <div style={{ textAlign: 'center', maxWidth: '700px', margin: '0 auto' }}>
           <span style={{ fontSize: '12px', color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 'bold' }}>İletişim</span>
           <h2 style={{ fontSize: '32px', fontWeight: 'bold', color: '#fff', marginTop: '8px', marginBottom: '15px' }}>Sipariş ve Bilgi Alın</h2>
-          <p style={{ color: '#888', fontSize: '15px', marginBottom: '35px' }}>Ana arı, kovanlı arı ve toptan bal siparişleriniz için bizimle doğrudan iletişime geçebilirsiniz.</p>
+          <p style={{ color: '#888', fontSize: '15px', marginBottom: '35px' }}>Belfast ana arı satışı, paket arı siparişi ve organik Erzincan balı fiyatları için doğrudan ulaşabilirsiniz.</p>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '30px' }}>
             <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '20px', borderRadius: '10px' }}>
               <div style={{ fontSize: '20px', marginBottom: '5px' }}>📍</div>
-              <h4 style={{ fontSize: '14px', color: '#f59e0b', margin: '0 0 5px 0' }}>Saha Konumu</h4>
-              <p style={{ fontSize: '13px', color: '#ccc', margin: 0 }}>Aydın & Nazilli / Türkiye</p>
+              <h4 style={{ fontSize: '14px', color: '#f59e0b', margin: '0 0 5px 0' }}>Üretim Sahaları</h4>
+              <p style={{ fontSize: '13px', color: '#ccc', margin: 0 }}>Aydın & Nazilli / Erzincan Çayırlı</p>
             </div>
             <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '20px', borderRadius: '10px' }}>
               <div style={{ fontSize: '20px', marginBottom: '5px' }}>📞</div>
-              <h4 style={{ fontSize: '14px', color: '#f59e0b', margin: '0 0 5px 0' }}>Telefon</h4>
-              <p style={{ fontSize: '13px', color: '#ccc', margin: 0 }}>+90 (5XX) XXX XX XX</p>
+              <h4 style={{ fontSize: '14px', color: '#f59e0b', margin: '0 0 5px 0' }}>Telefon & WhatsApp</h4>
+              <p style={{ fontSize: '13px', color: '#ccc', margin: 0 }}>
+                <a href="tel:+905358468299" style={{ color: '#ccc', textDecoration: 'none' }}>+90 535 846 82 99</a>
+              </p>
             </div>
           </div>
 
           <a 
-            href="https://wa.me/905000000000?text=Merhaba,%20ana%20ar%C4%B1%20ve%20arıc%C4%B1l%C4%B1k%20%C3%BCr%C3%BCnleri%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum." 
+            href="https://wa.me/905358468299?text=Merhaba,%20Belfast%20ana%20arı%20satışı,%20paket%20arı%20ve%20organik%20bal%20siparişi%20hakkında%20bilgi%20almak%20istiyorum." 
             target="_blank" 
             rel="noopener noreferrer" 
             style={{ display: 'inline-block', backgroundColor: '#f59e0b', color: '#000', padding: '14px 32px', borderRadius: '8px', fontWeight: 'bold', textDecoration: 'none', fontSize: '15px', transition: '0.2s' }}
@@ -383,8 +410,10 @@ export default function Home() {
 
       {/* Footer */}
       <footer style={{ textAlign: 'center', padding: '40px', color: '#555', fontSize: '13px', borderTop: '1px solid #222', marginTop: '40px' }}>
-        &copy; 2026 Korkmaz Arıcılık. Tüm hakları saklıdır.
+        &copy; 2026 Korkmaz Arıcılık. Tüm hakları saklıdır. | Belfast Ana Arı & Organik Bal Satışı
       </footer>
     </div>
   )
 }
+
+```
