@@ -25,37 +25,61 @@ export default function Home() {
   ])
 
   const [slideIndex, setSlideIndex] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
 
-  // Supabase Verilerini Çekme
+  // Mobil Ekran Kontrolü
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  // Supabase Verilerini Çekme (Hata Korumalı)
   useEffect(() => {
     const fetchSupabaseData = async () => {
-      const { data: bData } = await supabase.from('blogs').select('*').order('id', { ascending: false })
-      const { data: hData } = await supabase.from('hero_photos').select('*').order('id', { ascending: false })
+      try {
+        const { data: bData } = await supabase.from('blogs').select('*').order('id', { ascending: false })
+        const { data: hData } = await supabase.from('hero_photos').select('*').order('id', { ascending: false })
 
-      if (bData && bData.length > 0) setBlogs(bData)
-      if (hData && hData.length > 0) setHeroPhotos(hData)
+        if (bData && bData.length > 0) setBlogs(bData)
+        if (hData && hData.length > 0) setHeroPhotos(hData)
+      } catch (error) {
+        console.error('Supabase veri çekme hatası:', error)
+      }
     }
 
     fetchSupabaseData()
   }, [])
 
-  // Otomatik Slider Akışı (Her 3.5 saniyede bir kayar)
+  // Slider Dinamik Limit Kontrolü
+  const visibleCount = isMobile ? 1 : 3
+  const maxIndex = Math.max(0, heroPhotos.length - visibleCount)
+
+  // Ekran Değiştiğinde Index Taşmasını Önleme
   useEffect(() => {
-    if (heroPhotos.length <= 3) return
+    if (slideIndex > maxIndex) {
+      setSlideIndex(maxIndex)
+    }
+  }, [maxIndex, slideIndex])
+
+  // Otomatik Slider Akışı (Her 3.5 saniyede bir)
+  useEffect(() => {
+    if (heroPhotos.length <= visibleCount) return
     const timer = setInterval(() => {
-      setSlideIndex((prev) => (prev + 1) % (heroPhotos.length - 2))
+      setSlideIndex((prev) => (prev >= maxIndex ? 0 : prev + 1))
     }, 3500)
     return () => clearInterval(timer)
-  }, [heroPhotos])
+  }, [heroPhotos.length, maxIndex, visibleCount])
 
   const nextSlide = () => {
-    if (slideIndex < heroPhotos.length - 3) setSlideIndex(slideIndex + 1)
-    else setSlideIndex(0)
+    setSlideIndex((prev) => (prev >= maxIndex ? 0 : prev + 1))
   }
 
   const prevSlide = () => {
-    if (slideIndex > 0) setSlideIndex(slideIndex - 1)
-    else setSlideIndex(heroPhotos.length - 3)
+    setSlideIndex((prev) => (prev <= 0 ? maxIndex : prev - 1))
   }
 
   const navItems = [
@@ -69,37 +93,83 @@ export default function Home() {
   return (
     <div style={{ backgroundColor: '#121212', color: '#ffffff', minHeight: '100vh', fontFamily: 'sans-serif', scrollBehavior: 'smooth' }}>
       
+      {/* Mobil ve Duyarlı Görünüm İçi Özel CSS */}
+      <style jsx global>{`
+        html { scroll-behavior: smooth; }
+        .header-container {
+          padding: 20px 60px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        .hero-title {
+          font-size: 48px;
+        }
+        .slider-track {
+          display: flex;
+          gap: 20px;
+          transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .slider-card {
+          flex: 0 0 calc((100% - 40px) / 3);
+          height: 240px;
+        }
+
+        @media (max-width: 768px) {
+          .header-container {
+            padding: 15px 20px;
+            flex-direction: column;
+            gap: 15px;
+          }
+          .nav-container {
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px !important;
+          }
+          .hero-title {
+            font-size: 30px !important;
+          }
+          .slider-card {
+            flex: 0 0 100%;
+            height: 220px;
+          }
+        }
+      `}</style>
+
       {/* Header / Navigasyon */}
-      <header style={{ position: 'sticky', top: 0, zIndex: 100, backgroundColor: 'rgba(18, 18, 18, 0.95)', backdropFilter: 'blur(8px)', padding: '20px 60px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #222' }}>
-        <a href="#anasayfa" style={{ fontSize: '28px', fontWeight: 'bold', color: '#f59e0b', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-          K<span style={{ color: '#fff', fontSize: '18px', marginLeft: '5px' }}>ORKMAZ</span>
-        </a>
-        
-        <nav style={{ display: 'flex', gap: '30px', fontSize: '14px', letterSpacing: '1px' }}>
-          {navItems.map((item) => (
-            <a
-              key={item.name}
-              href={item.href}
-              style={{
-                textDecoration: 'none',
-                color: item.name === 'Anasayfa' ? '#f59e0b' : '#aaa',
-                transition: '0.3s',
-                fontWeight: '500'
-              }}
-            >
-              {item.name}
-            </a>
-          ))}
-        </nav>
-        <a href="/admin" style={{ backgroundColor: '#222', border: '1px solid #444', color: '#f59e0b', padding: '8px 16px', borderRadius: '6px', fontSize: '13px', textDecoration: 'none', fontWeight: '600' }}>
-          Admin Paneli
-        </a>
+      <header style={{ position: 'sticky', top: 0, zIndex: 100, backgroundColor: 'rgba(18, 18, 18, 0.95)', backdropFilter: 'blur(8px)', borderBottom: '1px solid #222' }}>
+        <div className="header-container">
+          <a href="#anasayfa" style={{ fontSize: '28px', fontWeight: 'bold', color: '#f59e0b', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+            K<span style={{ color: '#fff', fontSize: '18px', marginLeft: '5px' }}>ORKMAZ</span>
+          </a>
+          
+          <nav className="nav-container" style={{ display: 'flex', gap: '30px', fontSize: '14px', letterSpacing: '1px' }}>
+            {navItems.map((item) => (
+              <a
+                key={item.name}
+                href={item.href}
+                style={{
+                  textDecoration: 'none',
+                  color: item.name === 'Anasayfa' ? '#f59e0b' : '#aaa',
+                  transition: '0.3s',
+                  fontWeight: '500'
+                }}
+              >
+                {item.name}
+              </a>
+            ))}
+          </nav>
+
+          <a href="/admin" style={{ backgroundColor: '#222', border: '1px solid #444', color: '#f59e0b', padding: '8px 16px', borderRadius: '6px', fontSize: '13px', textDecoration: 'none', fontWeight: '600' }}>
+            Admin Paneli
+          </a>
+        </div>
       </header>
 
-      {/* HERO SECTION + 3'LÜ AKAN FOTOĞRAF SLIDER */}
+      {/* HERO SECTION + AKAN FOTOĞRAF SLIDER */}
       <section id="anasayfa" style={{ padding: '60px 20px 40px', textAlign: 'center', borderBottom: '1px solid #222', overflow: 'hidden' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto 40px' }}>
-          <h1 style={{ fontSize: '48px', fontWeight: '800', marginBottom: '15px', lineHeight: '1.2' }}>
+          <h1 className="hero-title" style={{ fontWeight: '800', marginBottom: '15px', lineHeight: '1.2' }}>
             Doğanın Kalbinden <br/> <span style={{ color: '#f59e0b' }}>Profesyonel Arıcılığa</span>
           </h1>
           <p style={{ fontSize: '16px', color: '#aaa', lineHeight: '1.6', margin: 0 }}>
@@ -107,37 +177,55 @@ export default function Home() {
           </p>
         </div>
 
-        {/* 3'LÜ SLIDER ALANI */}
+        {/* SLIDER ALANI */}
         <div style={{ maxWidth: '1100px', margin: '0 auto', position: 'relative' }}>
           
           {/* Sol / Sağ Ok Butonları */}
-          <button onClick={prevSlide} style={{ position: 'absolute', left: '-15px', top: '45%', zIndex: 10, background: 'rgba(0,0,0,0.7)', color: '#f59e0b', border: '1px solid #444', borderRadius: '50%', width: '40px', height: '40px', cursor: 'pointer', fontSize: '18px' }}>&#10094;</button>
-          <button onClick={nextSlide} style={{ position: 'absolute', right: '-15px', top: '45%', zIndex: 10, background: 'rgba(0,0,0,0.7)', color: '#f59e0b', border: '1px solid #444', borderRadius: '50%', width: '40px', height: '40px', cursor: 'pointer', fontSize: '18px' }}>&#10095;</button>
+          {heroPhotos.length > visibleCount && (
+            <>
+              <button 
+                onClick={prevSlide} 
+                aria-label="Önceki Fotoğraf"
+                style={{ position: 'absolute', left: '5px', top: '45%', zIndex: 10, background: 'rgba(0,0,0,0.75)', color: '#f59e0b', border: '1px solid #444', borderRadius: '50%', width: '40px', height: '40px', cursor: 'pointer', fontSize: '18px' }}
+              >
+                &#10094;
+              </button>
+              <button 
+                onClick={nextSlide} 
+                aria-label="Sonraki Fotoğraf"
+                style={{ position: 'absolute', right: '5px', top: '45%', zIndex: 10, background: 'rgba(0,0,0,0.75)', color: '#f59e0b', border: '1px solid #444', borderRadius: '50%', width: '40px', height: '40px', cursor: 'pointer', fontSize: '18px' }}
+              >
+                &#10095;
+              </button>
+            </>
+          )}
 
           {/* Slider Penceresi */}
-          <div style={{ overflow: 'hidden', width: '100%' }}>
-            <div style={{
-              display: 'flex',
-              gap: '20px',
-              transition: 'transform 0.6s ease-in-out',
-              transform: `translateX(-${slideIndex * (100 / 3 + 1.33)}%)`
-            }}>
+          <div style={{ overflow: 'hidden', width: '100%', borderRadius: '12px' }}>
+            <div 
+              className="slider-track"
+              style={{
+                transform: `translateX(-${slideIndex * (isMobile ? 100 : 33.333 + 0.66)}%)`
+              }}
+            >
               {heroPhotos.map((item) => (
-                <div key={item.id} style={{
-                  flex: '0 0 calc(33.333% - 14px)',
-                  height: '220px',
-                  borderRadius: '12px',
-                  backgroundImage: `url(${item.url})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  border: '1px solid #333',
-                  position: 'relative',
-                  overflow: 'hidden',
-                  display: 'flex',
-                  alignItems: 'flex-end'
-                }}>
-                  <div style={{ width: '100%', background: 'linear-gradient(transparent, rgba(0,0,0,0.85))', padding: '12px', textAlign: 'left' }}>
-                    <span style={{ fontSize: '12px', color: '#f59e0b', fontWeight: 'bold' }}>{item.title}</span>
+                <div 
+                  key={item.id} 
+                  className="slider-card"
+                  style={{
+                    borderRadius: '12px',
+                    backgroundImage: `url(${item.url})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    border: '1px solid #333',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    alignItems: 'flex-end'
+                  }}
+                >
+                  <div style={{ width: '100%', background: 'linear-gradient(transparent, rgba(0,0,0,0.85))', padding: '14px', textAlign: 'left' }}>
+                    <span style={{ fontSize: '13px', color: '#f59e0b', fontWeight: 'bold' }}>{item.title}</span>
                   </div>
                 </div>
               ))}
@@ -196,7 +284,7 @@ export default function Home() {
 
       {/* HAKKIMIZDA BÖLÜMÜ */}
       <section id="hakkimizda" style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 20px 40px', borderTop: '1px solid #222' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '40px', alignItems: 'center' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '40px', alignItems: 'center' }}>
           <div>
             <span style={{ fontSize: '12px', color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 'bold' }}>Hakkımızda</span>
             <h2 style={{ fontSize: '32px', fontWeight: 'bold', color: '#fff', marginTop: '8px', marginBottom: '20px' }}>Geleneksel Tecrübe, Modern Arıcılık</h2>
@@ -248,7 +336,7 @@ export default function Home() {
           <p style={{ color: '#888', fontSize: '14px' }}>Admin panelinden eklenen güncel yazılar.</p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
           {blogs.map((blog, i) => (
             <div key={blog.id || i} style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '25px', borderRadius: '12px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
@@ -256,7 +344,7 @@ export default function Home() {
                 <h3 style={{ fontSize: '17px', lineHeight: '1.4', marginBottom: '12px', color: '#fff' }}>{blog.title}</h3>
                 <p style={{ fontSize: '13px', color: '#888', lineHeight: '1.5', marginBottom: '20px' }}>{blog.excerpt}</p>
               </div>
-              <span style={{ color: '#fff', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>Devamını Oku &rarr;</span>
+              <span style={{ color: '#f59e0b', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>Devamını Oku &rarr;</span>
             </div>
           ))}
         </div>
@@ -278,11 +366,16 @@ export default function Home() {
             <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '20px', borderRadius: '10px' }}>
               <div style={{ fontSize: '20px', marginBottom: '5px' }}>📞</div>
               <h4 style={{ fontSize: '14px', color: '#f59e0b', margin: '0 0 5px 0' }}>Telefon</h4>
-              <p style={{ fontSize: '13px', color: '#ccc', margin: 0 }}>İletişim Numarası</p>
+              <p style={{ fontSize: '13px', color: '#ccc', margin: 0 }}>+90 (5XX) XXX XX XX</p>
             </div>
           </div>
 
-          <a href="https://wa.me/905000000000" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', backgroundColor: '#f59e0b', color: '#000', padding: '12px 30px', borderRadius: '8px', fontWeight: 'bold', textDecoration: 'none', fontSize: '15px' }}>
+          <a 
+            href="https://wa.me/905000000000?text=Merhaba,%20ana%20ar%C4%B1%20ve%20arıc%C4%B1l%C4%B1k%20%C3%BCr%C3%BCnleri%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum." 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            style={{ display: 'inline-block', backgroundColor: '#f59e0b', color: '#000', padding: '14px 32px', borderRadius: '8px', fontWeight: 'bold', textDecoration: 'none', fontSize: '15px', transition: '0.2s' }}
+          >
             💬 WhatsApp İle İletişime Geç
           </a>
         </div>
