@@ -1,14 +1,14 @@
 import { supabase } from '../lib/supabase'
 
 export default async function sitemap() {
-  const baseUrl = 'https://korkmazaricilik.com' // Kendi domain alan adınızla değiştirin
+  const baseUrl = 'https://korkmazaricilik.com'
 
   // 1. Supabase'den dinamik blog yazılarını çek
   const { data: blogs } = await supabase
     .from('blogs')
     .select('id, updated_at, created_at')
 
-  // Blog detay/yazı sayfalarının URL yapıları (blog detay sayfanız varsa)
+  // Blog detay/yazı sayfalarının URL yapıları
   const blogUrls = (blogs || []).map((blog) => ({
     url: `${baseUrl}/blog/${blog.id}`,
     lastModified: new Date(blog.updated_at || blog.created_at || Date.now()),
