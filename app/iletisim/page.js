@@ -26,8 +26,9 @@ export default function IletisimPage() {
         <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '30px', borderRadius: '12px', textAlign: 'center' }}>
           <div style={{ fontSize: '30px', marginBottom: '10px' }}>📞</div>
           <h3 style={{ fontSize: '18px', color: '#f59e0b', margin: '0 0 8px 0' }}>Telefon</h3>
-          <p style={{ color: '#ccc', fontSize: '14px', margin: 0 }}>
-            <a href="tel:+905358468299" style={{ color: '#fff', textDecoration: 'none', fontWeight: 'bold' }}>+90 535 846 82 99</a>
+          <p style={{ color: '#ccc', fontSize: '14px', margin: 0, lineHeight: '1.6' }}>
+            <span style={{ display: 'block', color: '#eee', fontWeight: 'bold', fontSize: '15px', marginBottom: '4px' }}>Çağlar Korkmaz</span>
+            <a href="tel:+905358468299" style={{ color: '#f59e0b', textDecoration: 'none', fontWeight: 'bold' }}>+90 535 846 82 99</a>
           </p>
         </div>
       </div>
