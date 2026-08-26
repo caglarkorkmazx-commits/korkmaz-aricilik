@@ -21,6 +21,9 @@ export default function Admin() {
   // Blog State
   const [blogTitle, setBlogTitle] = useState('')
   const [blogExcerpt, setBlogExcerpt] = useState('')
+  const [blogUrl, setBlogUrl] = useState('')
+  const [blogFile, setBlogFile] = useState(null)
+  const [blogUploading, setBlogUploading] = useState(false)
   const [blogs, setBlogs] = useState([])
 
   useEffect(() => {
@@ -149,20 +152,57 @@ export default function Admin() {
   // Blog Ekleme
   const handleAddBlog = async (e) => {
     e.preventDefault()
-    if (!blogTitle || !blogExcerpt) return alert('Tüm alanları doldurun.')
+    if (!blogTitle || !blogExcerpt) return alert('Başlık ve özet alanlarını doldurun.')
+
+    setBlogUploading(true)
+    let finalImageUrl = blogUrl
+
+    // 1. Cihazdan dosya yüklendiyse Supabase Storage'a at
+    if (blogFile) {
+      const fileExt = blogFile.name.split('.').pop()
+      const fileName = `${Date.now()}.${fileExt}`
+      const filePath = `blog/${fileName}`
+
+      const { error: uploadError } = await supabase.storage
+        .from('hero-images')
+        .upload(filePath, blogFile)
+
+      if (uploadError) {
+        alert('Blog görseli yüklenirken hata: ' + uploadError.message)
+        setBlogUploading(false)
+        return
+      }
+
+      const { data: urlData } = supabase.storage
+        .from('hero-images')
+        .getPublicUrl(filePath)
+
+      finalImageUrl = urlData.publicUrl
+    }
+
+    // 2. Eğer dosya seçilmediyse ve dış URL girilmediyse, başlığı otomatik görsel olarak oluştur
+    if (!finalImageUrl) {
+      const formattedTitle = encodeURIComponent(blogTitle)
+      finalImageUrl = `https://placehold.co/800x450/1a1a1a/f59e0b?text=${formattedTitle}`
+    }
 
     const dateStr = new Date().toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })
     const { error } = await supabase.from('blogs').insert([
-      { title: blogTitle, excerpt: blogExcerpt, date: dateStr }
+      { title: blogTitle, excerpt: blogExcerpt, date: dateStr, image_url: finalImageUrl }
     ])
 
     if (!error) {
       setBlogTitle('')
       setBlogExcerpt('')
+      setBlogUrl('')
+      setBlogFile(null)
+      const fileInput = document.getElementById('blog-file-input')
+      if (fileInput) fileInput.value = ''
       fetchData()
     } else {
       alert('Blog eklenirken hata: ' + error.message)
     }
+    setBlogUploading(false)
   }
 
   const handleDeleteBlog = async (id) => {
@@ -338,8 +378,35 @@ export default function Admin() {
               onChange={(e) => setBlogExcerpt(e.target.value)}
               style={{ width: '100%', padding: '12px', backgroundColor: '#222', border: '1px solid #444', borderRadius: '6px', color: '#fff', fontSize: '14px', outline: 'none', resize: 'vertical' }}
             />
-            <button type="submit" style={{ backgroundColor: '#f59e0b', color: '#000', border: 'none', padding: '12px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '14px' }}>
-              Blog Yazısını Yayınla
+
+            <div>
+              <label style={{ display: 'block', fontSize: '13px', color: '#aaa', marginBottom: '6px' }}>Cihazdan Blog Görseli Seçin (Opsiyonel):</label>
+              <input
+                id="blog-file-input"
+                type="file"
+                accept="image/*"
+                onChange={(e) => setBlogFile(e.target.files[0])}
+                style={{ width: '100%', padding: '10px', backgroundColor: '#222', border: '1px solid #444', borderRadius: '6px', color: '#fff', fontSize: '13px' }}
+              />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', color: '#777', marginBottom: '4px' }}>Veya Dış Görsel URL'si (Opsiyonel):</label>
+              <input
+                type="text"
+                placeholder="https://..."
+                value={blogUrl}
+                onChange={(e) => setBlogUrl(e.target.value)}
+                style={{ width: '100%', padding: '10px', backgroundColor: '#222', border: '1px solid #333', borderRadius: '6px', color: '#aaa', fontSize: '13px', outline: 'none' }}
+              />
+            </div>
+
+            <button 
+              type="submit" 
+              disabled={blogUploading}
+              style={{ backgroundColor: blogUploading ? '#b47808' : '#f59e0b', color: '#000', border: 'none', padding: '12px', borderRadius: '6px', fontWeight: 'bold', cursor: blogUploading ? 'wait' : 'pointer', fontSize: '14px', marginTop: '10px' }}
+            >
+              {blogUploading ? 'Blog Yayınlanıyor...' : 'Blog Yazısını Yayınla'}
             </button>
           </form>
 
@@ -348,9 +415,14 @@ export default function Admin() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {blogs.map((blog) => (
                 <div key={blog.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#222', padding: '10px 15px', borderRadius: '6px', border: '1px solid #333' }}>
-                  <div>
-                    <div style={{ fontSize: '14px', fontWeight: 'bold' }}>{blog.title}</div>
-                    <div style={{ fontSize: '12px', color: '#888' }}>{blog.date}</div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    {blog.image_url && (
+                      <img src={blog.image_url} alt={blog.title} style={{ width: '50px', height: '40px', objectFit: 'cover', borderRadius: '4px' }} />
+                    )}
+                    <div>
+                      <div style={{ fontSize: '14px', fontWeight: 'bold' }}>{blog.title}</div>
+                      <div style={{ fontSize: '12px', color: '#888' }}>{blog.date}</div>
+                    </div>
                   </div>
                   <button onClick={() => handleDeleteBlog(blog.id)} style={{ backgroundColor: '#dc2626', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}>Sil</button>
                 </div>
