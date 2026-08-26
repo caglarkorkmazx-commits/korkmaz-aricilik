@@ -1,8 +1,3 @@
-Hata, sohbet ekranındaki açıklama metninin yanlışlıkla `app/page.js` dosyasının en üstüne yapıştırılmasından kaynaklanıyor. Dosyanın 1. satırında hiçbir metin olmadan doğrudan `'use client'` ile başlaması gerekiyor.
-
-Aşağıdaki temiz kodu doğrudan `app/page.js` dosyasına kopyalayıp tamamen üzerine yazabilirsin:
-
-```jsx
 'use client'
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
@@ -399,5 +394,3 @@ export default function Home() {
     </div>
   )
 }
-
-```
