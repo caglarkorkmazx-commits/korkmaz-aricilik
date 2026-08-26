@@ -20,6 +20,7 @@ export default function IletisimPage() {
           <p style={{ color: '#ccc', fontSize: '14px', margin: 0, lineHeight: '1.5' }}>
             Aydın / Nazilli <br />
             Erzincan / Çayırlı
+              Amasya
           </p>
         </div>
 
