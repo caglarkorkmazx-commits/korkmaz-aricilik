@@ -1,8 +1,6 @@
-İstediğin telefon numarası (**+90 535 846 82 99**) doğrudan WhatsApp butonuna ve iletişim alanına bağlandı. Ayrıca belirttiğin **Belfast ana arı satışı**, **organik doğal bal**, **Erzincan bal satışı**, **arı satın al** gibi hedef SEO kelimeleri metinlere, başlıklara ve Google botlarının siteyi tararken okuduğu **JSON-LD (Schema Structured Data)** veri yapısına doğal bir şekilde yedirildi.
+Hata, sohbet ekranındaki açıklama metninin yanlışlıkla `app/page.js` dosyasının en üstüne yapıştırılmasından kaynaklanıyor. Dosyanın 1. satırında hiçbir metin olmadan doğrudan `'use client'` ile başlaması gerekiyor.
 
-Bu sayede Google botları siteyi ziyaret ettiğinde doğrudan bu anahtar kelimelerle indeksleme yapacaktır.
-
-İşte kopyalayıp direkt `app/page.js` dosyasına yapıştırabileceğin **eksiksiz kod**:
+Aşağıdaki temiz kodu doğrudan `app/page.js` dosyasına kopyalayıp tamamen üzerine yazabilirsin:
 
 ```jsx
 'use client'
@@ -22,7 +20,6 @@ export default function Home() {
     { id: 4, title: 'Erzincan Bal Hasadı', tag: 'Teknik' }
   ])
 
-  // Hero Slider Fotoğrafları
   const [heroPhotos, setHeroPhotos] = useState([
     { id: 1, title: 'Aydın Nazilli Arıcılık Sahası', url: 'https://images.unsplash.com/photo-1587049352847-4a222e784d38?auto=format&fit=crop&w=600&q=80' },
     { id: 2, title: 'Belfast & Karniyol F0 Larva Transferi', url: 'https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=600&q=80' },
@@ -34,7 +31,6 @@ export default function Home() {
   const [slideIndex, setSlideIndex] = useState(0)
   const [isMobile, setIsMobile] = useState(false)
 
-  // Mobil Ekran Kontrolü
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768)
@@ -44,15 +40,16 @@ export default function Home() {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
-  // Supabase Verilerini Çekme (Hata Korumalı)
   useEffect(() => {
     const fetchSupabaseData = async () => {
       try {
         const { data: bData } = await supabase.from('blogs').select('*').order('id', { ascending: false })
         const { data: hData } = await supabase.from('hero_photos').select('*').order('id', { ascending: false })
+        const { data: pData } = await supabase.from('photos').select('*').order('id', { ascending: false })
 
         if (bData && bData.length > 0) setBlogs(bData)
         if (hData && hData.length > 0) setHeroPhotos(hData)
+        if (pData && pData.length > 0) setPhotos(pData)
       } catch (error) {
         console.error('Supabase veri çekme hatası:', error)
       }
@@ -61,7 +58,6 @@ export default function Home() {
     fetchSupabaseData()
   }, [])
 
-  // Slider Dinamik Limit Kontrolü
   const visibleCount = isMobile ? 1 : 3
   const maxIndex = Math.max(0, heroPhotos.length - visibleCount)
 
@@ -71,7 +67,6 @@ export default function Home() {
     }
   }, [maxIndex, slideIndex])
 
-  // Otomatik Slider Akışı (Her 3.5 saniyede bir)
   useEffect(() => {
     if (heroPhotos.length <= visibleCount) return
     const timer = setInterval(() => {
@@ -96,7 +91,6 @@ export default function Home() {
     { name: 'İletişim', href: '#iletisim' },
   ]
 
-  // Google SEO için Schema.org Yapısal Verisi (JSON-LD)
   const schemaData = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
@@ -114,13 +108,11 @@ export default function Home() {
   return (
     <div style={{ backgroundColor: '#121212', color: '#ffffff', minHeight: '100vh', fontFamily: 'sans-serif', scrollBehavior: 'smooth' }}>
       
-      {/* Google SEO Yapısal Veri (JSON-LD) */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
       />
 
-      {/* Stil Düzenlemeleri */}
       <style jsx global>{`
         html { scroll-behavior: smooth; }
         .header-container {
@@ -163,7 +155,6 @@ export default function Home() {
         }
       `}</style>
 
-      {/* Header / Navigasyon */}
       <header style={{ position: 'sticky', top: 0, zIndex: 100, backgroundColor: 'rgba(18, 18, 18, 0.95)', backdropFilter: 'blur(8px)', borderBottom: '1px solid #222' }}>
         <div className="header-container">
           <a href="#anasayfa" style={{ fontSize: '28px', fontWeight: 'bold', color: '#f59e0b', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
@@ -193,7 +184,6 @@ export default function Home() {
         </div>
       </header>
 
-      {/* HERO SECTION (SEO ODAKLI BAŞLIKLAR VE SLIDER) */}
       <section id="anasayfa" style={{ padding: '60px 20px 40px', textAlign: 'center', borderBottom: '1px solid #222', overflow: 'hidden' }}>
         <div style={{ maxWidth: '850px', margin: '0 auto 40px' }}>
           <h1 className="hero-title" style={{ fontWeight: '800', marginBottom: '15px', lineHeight: '1.2' }}>
@@ -204,9 +194,7 @@ export default function Home() {
           </p>
         </div>
 
-        {/* SLIDER ALANI */}
         <div style={{ maxWidth: '1100px', margin: '0 auto', position: 'relative' }}>
-          
           {heroPhotos.length > visibleCount && (
             <>
               <button 
@@ -259,7 +247,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* HİZMETLERİMİZ BÖLÜMÜ (SEO KELİMELERİ EKLENDİ) */}
       <section id="hizmetlerimiz" style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 20px 40px' }}>
         <div style={{ marginBottom: '35px', textAlign: 'center' }}>
           <h2 style={{ fontSize: '32px', fontWeight: 'bold', color: '#fff', marginBottom: '10px' }}>Hizmetlerimiz ve Ürünlerimiz</h2>
@@ -267,7 +254,6 @@ export default function Home() {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
-          
           <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '25px', borderRadius: '12px', display: 'flex', flexDirection: 'column' }}>
             <h3 style={{ fontSize: '18px', color: '#f59e0b', marginBottom: '15px', fontWeight: 'bold', borderBottom: '1px solid #2b2b2b', paddingBottom: '10px' }}>
               Belfast Ana Arı Satışı
@@ -303,11 +289,9 @@ export default function Home() {
               Erzincan Çayırlı yüksek yaylalarından elde ettiğimiz <strong>organik doğal bal</strong> çeşitlerimizi Eylül ayı itibarıyla süzme ve petek olarak sunuyoruz. Toptan ve perakende <strong>Erzincan bal satışı</strong> için hemen iletişime geçebilirsiniz.
             </p>
           </div>
-
         </div>
       </section>
 
-      {/* HAKKIMIZDA BÖLÜMÜ */}
       <section id="hakkimizda" style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 20px 40px', borderTop: '1px solid #222' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '40px', alignItems: 'center' }}>
           <div>
@@ -332,7 +316,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* GALERİ BÖLÜMÜ */}
       <section id="galeri" style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 20px 40px', borderTop: '1px solid #222' }}>
         <div style={{ marginBottom: '25px' }}>
           <h2 style={{ fontSize: '26px', fontWeight: 'bold', marginBottom: '8px' }}>Fotoğraf Galerisi</h2>
@@ -342,9 +325,13 @@ export default function Home() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '15px' }}>
           {photos.map((photo) => (
             <div key={photo.id} style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', borderRadius: '12px', height: '180px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '15px', position: 'relative', overflow: 'hidden' }}>
-              <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: '#1e1e1e', zIndex: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#555', fontSize: '12px' }}>
-                [ Görsel ]
-              </div>
+              {photo.url ? (
+                <img src={photo.url} alt={photo.title} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0 }} />
+              ) : (
+                <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: '#1e1e1e', zIndex: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#555', fontSize: '12px' }}>
+                  [ Görsel ]
+                </div>
+              )}
               <div style={{ position: 'relative', zIndex: 1, background: 'rgba(0,0,0,0.75)', padding: '8px 12px', borderRadius: '6px' }}>
                 <span style={{ fontSize: '10px', color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '1px', display: 'block', marginBottom: '2px' }}>{photo.tag}</span>
                 <h4 style={{ fontSize: '13px', color: '#fff', margin: 0 }}>{photo.title}</h4>
@@ -354,7 +341,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* BLOGLAR BÖLÜMÜ */}
       <section style={{ maxWidth: '1200px', margin: '0 auto', padding: '60px 20px', borderTop: '1px solid #222' }}>
         <div style={{ marginBottom: '25px' }}>
           <h2 style={{ fontSize: '26px', fontWeight: 'bold', marginBottom: '8px' }}>Arıcılık Blog & Rehber</h2>
@@ -375,7 +361,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* İLETİŞİM BÖLÜMÜ (WHATSAPP + Numaralar Güncellendi) */}
       <section id="iletisim" style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 20px', borderTop: '1px solid #222' }}>
         <div style={{ textAlign: 'center', maxWidth: '700px', margin: '0 auto' }}>
           <span style={{ fontSize: '12px', color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 'bold' }}>İletişim</span>
@@ -408,7 +393,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer style={{ textAlign: 'center', padding: '40px', color: '#555', fontSize: '13px', borderTop: '1px solid #222', marginTop: '40px' }}>
         &copy; 2026 Korkmaz Arıcılık. Tüm hakları saklıdır. | Belfast Ana Arı & Organik Bal Satışı
       </footer>
