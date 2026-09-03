@@ -9,13 +9,13 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="tr">
-      <head>
-        {/* Google Analytics */}
+      <body style={{ margin: 0, padding: 0, backgroundColor: '#121212', color: '#ffffff', fontFamily: 'sans-serif' }}>
+        {/* Google Analytics - body içerisinde en üstte yer alması en güvenlisidir */}
         <Script
-          strategy="lazyOnload"
           src="https://www.googletagmanager.com/gtag/js?id=G-F3EVRQ8045"
+          strategy="afterInteractive"
         />
-        <Script id="google-analytics" strategy="lazyOnload">
+        <Script id="google-analytics" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
@@ -23,12 +23,11 @@ export default function RootLayout({ children }) {
             gtag('config', 'G-F3EVRQ8045');
           `}
         </Script>
-      </head>
-      <body style={{ margin: 0, padding: 0, backgroundColor: '#121212', color: '#ffffff', fontFamily: 'sans-serif' }}>
-        {/* Header bileşenini en üste koyuyoruz */}
+
+        {/* Header bileşeni */}
         <Header />
         
-        {/* Sayfa içerikleri buraya yüklenecek */}
+        {/* Sayfa içerikleri */}
         {children}
       </body>
     </html>
