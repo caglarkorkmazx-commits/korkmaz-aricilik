@@ -176,18 +176,26 @@ export default function Home() {
                     className="slider-card"
                     style={{
                       borderRadius: '12px',
-                      backgroundImage: `url(${item.url})`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'top center',
+                      backgroundColor: '#000',
                       border: '1px solid #333',
                       position: 'relative',
                       overflow: 'hidden',
                       display: 'flex',
-                      alignItems: 'flex-end',
+                      alignItems: 'center',
+                      justifyContent: 'center',
                       boxSizing: 'border-box'
                     }}
                   >
-                    <div style={{ width: '100%', background: 'linear-gradient(transparent, rgba(0,0,0,0.85))', padding: '14px', textAlign: 'left', boxSizing: 'border-box' }}>
+                    <img 
+                      src={item.url} 
+                      alt={item.title} 
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain'
+                      }}
+                    />
+                    <div style={{ position: 'absolute', bottom: 0, width: '100%', background: 'linear-gradient(transparent, rgba(0,0,0,0.85))', padding: '14px', textAlign: 'left', boxSizing: 'border-box' }}>
                       <span style={{ fontSize: '13px', color: '#f59e0b', fontWeight: 'bold' }}>{item.title}</span>
                     </div>
                   </div>
