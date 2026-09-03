@@ -3,6 +3,38 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabase'
 
 export default function Admin() {
+  // Giriş (Auth) State'leri
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [usernameInput, setUsernameInput] = useState('')
+  const [passwordInput, setPasswordInput] = useState('')
+  const [loginError, setLoginError] = useState('')
+
+  // Sayfa yüklendiğinde daha önceden giriş yapılmış mı kontrol et
+  useEffect(() => {
+    const authStatus = sessionStorage.getItem('admin_auth')
+    if (authStatus === 'true') {
+      setIsAuthenticated(true)
+    }
+  }, [])
+
+  const handleLogin = (e) => {
+    e.preventDefault()
+    if (usernameInput === 'admin' && passwordInput === 'korkmaz1120') {
+      sessionStorage.setItem('admin_auth', 'true')
+      setIsAuthenticated(true)
+      setLoginError('')
+    } else {
+      setLoginError('Kullanıcı adı veya şifre hatalı!')
+    }
+  }
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('admin_auth')
+    setIsAuthenticated(false)
+    setUsernameInput('')
+    setPasswordInput('')
+  }
+
   // Hero Slider State
   const [heroTitle, setHeroTitle] = useState('')
   const [heroUrl, setHeroUrl] = useState('')
@@ -27,8 +59,10 @@ export default function Admin() {
   const [blogs, setBlogs] = useState([])
 
   useEffect(() => {
-    fetchData()
-  }, [])
+    if (isAuthenticated) {
+      fetchData()
+    }
+  }, [isAuthenticated])
 
   const fetchData = async () => {
     const { data: hData } = await supabase.from('hero_photos').select('*').order('id', { ascending: false })
@@ -157,7 +191,6 @@ export default function Admin() {
     setBlogUploading(true)
     let finalImageUrl = blogUrl
 
-    // 1. Cihazdan dosya yüklendiyse Supabase Storage'a at
     if (blogFile) {
       const fileExt = blogFile.name.split('.').pop()
       const fileName = `${Date.now()}.${fileExt}`
@@ -180,7 +213,6 @@ export default function Admin() {
       finalImageUrl = urlData.publicUrl
     }
 
-    // 2. Eğer dosya seçilmediyse ve dış URL girilmediyse, başlığı otomatik görsel olarak oluştur
     if (!finalImageUrl) {
       const formattedTitle = encodeURIComponent(blogTitle)
       finalImageUrl = `https://placehold.co/800x450/1a1a1a/f59e0b?text=${formattedTitle}`
@@ -210,11 +242,68 @@ export default function Admin() {
     if (!error) fetchData()
   }
 
+  // Eğer giriş yapılmadıysa Login Ekranını Göster
+  if (!isAuthenticated) {
+    return (
+      <div style={{ backgroundColor: '#121212', color: '#ffffff', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'sans-serif', padding: '20px' }}>
+        <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '40px', borderRadius: '12px', width: '100%', maxWidth: '400px', boxSizing: 'border-box' }}>
+          <div style={{ textAlign: 'center', marginBottom: '25px' }}>
+            <h1 style={{ fontSize: '20px', fontWeight: 'bold', color: '#f59e0b', margin: '0 0 8px 0' }}>Yönetim Paneli Girişi</h1>
+            <p style={{ color: '#888', fontSize: '13px', margin: 0 }}>Korkmaz Arıcılık</p>
+          </div>
+
+          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', color: '#aaa', marginBottom: '5px' }}>Kullanıcı Adı</label>
+              <input
+                type="text"
+                value={usernameInput}
+                onChange={(e) => setUsernameInput(e.target.value)}
+                style={{ width: '100%', padding: '12px', backgroundColor: '#222', border: '1px solid #444', borderRadius: '6px', color: '#fff', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }}
+                required
+              />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', color: '#aaa', marginBottom: '5px' }}>Şifre</label>
+              <input
+                type="password"
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                style={{ width: '100%', padding: '12px', backgroundColor: '#222', border: '1px solid #444', borderRadius: '6px', color: '#fff', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }}
+                required
+              />
+            </div>
+
+            {loginError && (
+              <div style={{ color: '#dc2626', fontSize: '13px', textAlign: 'center' }}>{loginError}</div>
+            )}
+
+            <button
+              type="submit"
+              style={{ backgroundColor: '#f59e0b', color: '#000', border: 'none', padding: '12px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '14px', marginTop: '5px' }}
+            >
+              Giriş Yap
+            </button>
+          </form>
+
+          <div style={{ textAlign: 'center', marginTop: '20px' }}>
+            <a href="/" style={{ color: '#888', textDecoration: 'none', fontSize: '13px' }}>&larr; Siteye Geri Dön</a>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Giriş yapıldıysa Admin Paneli İçeriğini Göster
   return (
     <div style={{ backgroundColor: '#121212', color: '#ffffff', minHeight: '100vh', fontFamily: 'sans-serif', padding: '40px 20px' }}>
-      <header style={{ maxWidth: '850px', margin: '0 auto 30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#f59e0b' }}>Korkmaz Arıcılık - Canlı Yönetim Paneli</h1>
-        <a href="/" style={{ color: '#aaa', textDecoration: 'none', fontSize: '14px' }}>&larr; Siteye Dön</a>
+      <header style={{ maxWidth: '850px', margin: '0 auto 30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px' }}>
+        <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#f59e0b', margin: 0 }}>Korkmaz Arıcılık - Yönetim Paneli</h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+          <a href="/" style={{ color: '#aaa', textDecoration: 'none', fontSize: '14px' }}>Siteye Dön</a>
+          <button onClick={handleLogout} style={{ backgroundColor: '#333', color: '#fff', border: '1px solid #444', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '13px' }}>Çıkış Yap</button>
+        </div>
       </header>
 
       <main style={{ maxWidth: '850px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '35px' }}>
@@ -229,7 +318,7 @@ export default function Admin() {
               placeholder="Başlık / Etiket (Örn: Nazilli Arıcılık Sahası)"
               value={heroTitle}
               onChange={(e) => setHeroTitle(e.target.value)}
-              style={{ width: '100%', padding: '12px', backgroundColor: '#222', border: '1px solid #444', borderRadius: '6px', color: '#fff', fontSize: '14px', outline: 'none' }}
+              style={{ width: '100%', padding: '12px', backgroundColor: '#222', border: '1px solid #444', borderRadius: '6px', color: '#fff', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }}
             />
 
             <div>
@@ -239,7 +328,7 @@ export default function Admin() {
                 type="file"
                 accept="image/*"
                 onChange={(e) => setHeroFile(e.target.files[0])}
-                style={{ width: '100%', padding: '10px', backgroundColor: '#222', border: '1px solid #444', borderRadius: '6px', color: '#fff', fontSize: '13px' }}
+                style={{ width: '100%', padding: '10px', backgroundColor: '#222', border: '1px solid #444', borderRadius: '6px', color: '#fff', fontSize: '13px', boxSizing: 'border-box' }}
               />
             </div>
 
@@ -250,7 +339,7 @@ export default function Admin() {
                 placeholder="https://..."
                 value={heroUrl}
                 onChange={(e) => setHeroUrl(e.target.value)}
-                style={{ width: '100%', padding: '10px', backgroundColor: '#222', border: '1px solid #333', borderRadius: '6px', color: '#aaa', fontSize: '13px', outline: 'none' }}
+                style={{ width: '100%', padding: '10px', backgroundColor: '#222', border: '1px solid #333', borderRadius: '6px', color: '#aaa', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }}
               />
             </div>
 
@@ -267,12 +356,12 @@ export default function Admin() {
             <h3 style={{ fontSize: '14px', color: '#aaa', marginBottom: '10px' }}>Kayıtlı Slider Görselleri ({heroPhotos.length})</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {heroPhotos.map((photo) => (
-                <div key={photo.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#222', padding: '10px 15px', borderRadius: '6px', border: '1px solid #333' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <img src={photo.url} alt={photo.title} style={{ width: '45px', height: '45px', objectFit: 'cover', borderRadius: '4px' }} />
-                    <span style={{ fontSize: '14px' }}>{photo.title}</span>
+                <div key={photo.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#222', padding: '10px 15px', borderRadius: '6px', border: '1px solid #333', gap: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', overflow: 'hidden' }}>
+                    <img src={photo.url} alt={photo.title} style={{ width: '45px', height: '45px', objectFit: 'cover', borderRadius: '4px', flexShrink: 0 }} />
+                    <span style={{ fontSize: '14px', wordBreak: 'break-word' }}>{photo.title}</span>
                   </div>
-                  <button onClick={() => handleDeleteHeroPhoto(photo.id)} style={{ backgroundColor: '#dc2626', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}>Sil</button>
+                  <button onClick={() => handleDeleteHeroPhoto(photo.id)} style={{ backgroundColor: '#dc2626', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', flexShrink: 0 }}>Sil</button>
                 </div>
               ))}
             </div>
@@ -284,18 +373,18 @@ export default function Admin() {
           <h2 style={{ fontSize: '18px', fontWeight: 'bold', color: '#f59e0b', marginBottom: '20px' }}>2. Fotoğraf Galerisi</h2>
           
           <form onSubmit={handleAddGalleryPhoto} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-            <div style={{ display: 'flex', gap: '10px' }}>
+            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
               <input
                 type="text"
                 placeholder="Görsel Başlığı (Örn: Belfast Ana Arı Üretimi)"
                 value={photoTitle}
                 onChange={(e) => setPhotoTitle(e.target.value)}
-                style={{ flex: 2, padding: '12px', backgroundColor: '#222', border: '1px solid #444', borderRadius: '6px', color: '#fff', fontSize: '14px', outline: 'none' }}
+                style={{ flex: '2 1 200px', padding: '12px', backgroundColor: '#222', border: '1px solid #444', borderRadius: '6px', color: '#fff', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }}
               />
               <select
                 value={photoTag}
                 onChange={(e) => setPhotoTag(e.target.value)}
-                style={{ flex: 1, padding: '12px', backgroundColor: '#222', border: '1px solid #444', borderRadius: '6px', color: '#fff', fontSize: '14px', outline: 'none' }}
+                style={{ flex: '1 1 120px', padding: '12px', backgroundColor: '#222', border: '1px solid #444', borderRadius: '6px', color: '#fff', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }}
               >
                 <option value="Üretim">Üretim</option>
                 <option value="Saha">Saha</option>
@@ -312,7 +401,7 @@ export default function Admin() {
                 type="file"
                 accept="image/*"
                 onChange={(e) => setPhotoFile(e.target.files[0])}
-                style={{ width: '100%', padding: '10px', backgroundColor: '#222', border: '1px solid #444', borderRadius: '6px', color: '#fff', fontSize: '13px' }}
+                style={{ width: '100%', padding: '10px', backgroundColor: '#222', border: '1px solid #444', borderRadius: '6px', color: '#fff', fontSize: '13px', boxSizing: 'border-box' }}
               />
             </div>
 
@@ -323,7 +412,7 @@ export default function Admin() {
                 placeholder="https://..."
                 value={photoUrl}
                 onChange={(e) => setPhotoUrl(e.target.value)}
-                style={{ width: '100%', padding: '10px', backgroundColor: '#222', border: '1px solid #333', borderRadius: '6px', color: '#aaa', fontSize: '13px', outline: 'none' }}
+                style={{ width: '100%', padding: '10px', backgroundColor: '#222', border: '1px solid #333', borderRadius: '6px', color: '#aaa', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }}
               />
             </div>
 
@@ -340,19 +429,19 @@ export default function Admin() {
             <h3 style={{ fontSize: '14px', color: '#aaa', marginBottom: '10px' }}>Galerideki Fotoğraflar ({photos.length})</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {photos.map((photo) => (
-                <div key={photo.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#222', padding: '10px 15px', borderRadius: '6px', border: '1px solid #333' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div key={photo.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#222', padding: '10px 15px', borderRadius: '6px', border: '1px solid #333', gap: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', overflow: 'hidden' }}>
                     {photo.url ? (
-                      <img src={photo.url} alt={photo.title} style={{ width: '45px', height: '45px', objectFit: 'cover', borderRadius: '4px' }} />
+                      <img src={photo.url} alt={photo.title} style={{ width: '45px', height: '45px', objectFit: 'cover', borderRadius: '4px', flexShrink: 0 }} />
                     ) : (
-                      <div style={{ width: '45px', height: '45px', backgroundColor: '#333', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: '#888' }}>Yok</div>
+                      <div style={{ width: '45px', height: '45px', backgroundColor: '#333', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: '#888', flexShrink: 0 }}>Yok</div>
                     )}
-                    <div>
-                      <div style={{ fontSize: '14px', fontWeight: 'bold' }}>{photo.title}</div>
+                    <div style={{ overflow: 'hidden' }}>
+                      <div style={{ fontSize: '14px', fontWeight: 'bold', wordBreak: 'break-word' }}>{photo.title}</div>
                       <span style={{ fontSize: '11px', color: '#f59e0b' }}>[{photo.tag}]</span>
                     </div>
                   </div>
-                  <button onClick={() => handleDeleteGalleryPhoto(photo.id)} style={{ backgroundColor: '#dc2626', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}>Sil</button>
+                  <button onClick={() => handleDeleteGalleryPhoto(photo.id)} style={{ backgroundColor: '#dc2626', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', flexShrink: 0 }}>Sil</button>
                 </div>
               ))}
             </div>
@@ -369,14 +458,14 @@ export default function Admin() {
               placeholder="Blog Başlığı"
               value={blogTitle}
               onChange={(e) => setBlogTitle(e.target.value)}
-              style={{ width: '100%', padding: '12px', backgroundColor: '#222', border: '1px solid #444', borderRadius: '6px', color: '#fff', fontSize: '14px', outline: 'none' }}
+              style={{ width: '100%', padding: '12px', backgroundColor: '#222', border: '1px solid #444', borderRadius: '6px', color: '#fff', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }}
             />
             <textarea
               placeholder="Kısa özet / Metin"
               rows="3"
               value={blogExcerpt}
               onChange={(e) => setBlogExcerpt(e.target.value)}
-              style={{ width: '100%', padding: '12px', backgroundColor: '#222', border: '1px solid #444', borderRadius: '6px', color: '#fff', fontSize: '14px', outline: 'none', resize: 'vertical' }}
+              style={{ width: '100%', padding: '12px', backgroundColor: '#222', border: '1px solid #444', borderRadius: '6px', color: '#fff', fontSize: '14px', outline: 'none', resize: 'vertical', boxSizing: 'border-box' }}
             />
 
             <div>
@@ -386,7 +475,7 @@ export default function Admin() {
                 type="file"
                 accept="image/*"
                 onChange={(e) => setBlogFile(e.target.files[0])}
-                style={{ width: '100%', padding: '10px', backgroundColor: '#222', border: '1px solid #444', borderRadius: '6px', color: '#fff', fontSize: '13px' }}
+                style={{ width: '100%', padding: '10px', backgroundColor: '#222', border: '1px solid #444', borderRadius: '6px', color: '#fff', fontSize: '13px', boxSizing: 'border-box' }}
               />
             </div>
 
@@ -397,7 +486,7 @@ export default function Admin() {
                 placeholder="https://..."
                 value={blogUrl}
                 onChange={(e) => setBlogUrl(e.target.value)}
-                style={{ width: '100%', padding: '10px', backgroundColor: '#222', border: '1px solid #333', borderRadius: '6px', color: '#aaa', fontSize: '13px', outline: 'none' }}
+                style={{ width: '100%', padding: '10px', backgroundColor: '#222', border: '1px solid #333', borderRadius: '6px', color: '#aaa', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }}
               />
             </div>
 
@@ -414,17 +503,17 @@ export default function Admin() {
             <h3 style={{ fontSize: '14px', color: '#aaa', marginBottom: '10px' }}>Mevcut Bloglar ({blogs.length})</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {blogs.map((blog) => (
-                <div key={blog.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#222', padding: '10px 15px', borderRadius: '6px', border: '1px solid #333' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div key={blog.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#222', padding: '10px 15px', borderRadius: '6px', border: '1px solid #333', gap: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', overflow: 'hidden' }}>
                     {blog.image_url && (
-                      <img src={blog.image_url} alt={blog.title} style={{ width: '50px', height: '40px', objectFit: 'cover', borderRadius: '4px' }} />
+                      <img src={blog.image_url} alt={blog.title} style={{ width: '50px', height: '40px', objectFit: 'cover', borderRadius: '4px', flexShrink: 0 }} />
                     )}
-                    <div>
-                      <div style={{ fontSize: '14px', fontWeight: 'bold' }}>{blog.title}</div>
+                    <div style={{ overflow: 'hidden' }}>
+                      <div style={{ fontSize: '14px', fontWeight: 'bold', wordBreak: 'break-word' }}>{blog.title}</div>
                       <div style={{ fontSize: '12px', color: '#888' }}>{blog.date}</div>
                     </div>
                   </div>
-                  <button onClick={() => handleDeleteBlog(blog.id)} style={{ backgroundColor: '#dc2626', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}>Sil</button>
+                  <button onClick={() => handleDeleteBlog(blog.id)} style={{ backgroundColor: '#dc2626', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', flexShrink: 0 }}>Sil</button>
                 </div>
               ))}
             </div>
