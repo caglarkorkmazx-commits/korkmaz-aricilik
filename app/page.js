@@ -178,7 +178,7 @@ export default function Home() {
                       borderRadius: '12px',
                       backgroundImage: `url(${item.url})`,
                       backgroundSize: 'cover',
-                      backgroundPosition: 'center',
+                      backgroundPosition: 'top center',
                       border: '1px solid #333',
                       position: 'relative',
                       overflow: 'hidden',
