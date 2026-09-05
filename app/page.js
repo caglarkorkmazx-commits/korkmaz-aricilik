@@ -310,7 +310,7 @@ export default function Home() {
                     </p>
                   </div>
                   <Link 
-                    href={`/blog/${blog.id}`}
+                    href={`/blog/${blog.slug}`}
                     style={{ color: '#f59e0b', fontSize: '13px', fontWeight: '600', textDecoration: 'none' }}
                   >
                     Devamını Oku &rarr;
