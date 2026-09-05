@@ -2,6 +2,23 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabase'
 
+// YENİ EKLENEN: Başlığı URL'ye (Slug) çeviren otomatik fonksiyon
+const createSlug = (text) => {
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/ğ/g, 'g')
+    .replace(/ü/g, 'u')
+    .replace(/ş/g, 's')
+    .replace(/ı/g, 'i')
+    .replace(/ö/g, 'o')
+    .replace(/ç/g, 'c')
+    .replace(/[^a-z0-9 -]/g, '') // Sadece harf, rakam ve tireye izin ver
+    .replace(/\s+/g, '-')       // Boşlukları tireye çevir
+    .replace(/-+/g, '-');       // Fazladan tireleri teke düşür
+}
+
 export default function Admin() {
   // Giriş (Auth) State'leri
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -183,7 +200,7 @@ export default function Admin() {
     if (!error) fetchData()
   }
 
-  // Blog Ekleme
+  // Blog Ekleme (GÜNCELLENEN KISIM)
   const handleAddBlog = async (e) => {
     e.preventDefault()
     if (!blogTitle || !blogExcerpt) return alert('Başlık ve özet alanlarını doldurun.')
@@ -219,8 +236,18 @@ export default function Admin() {
     }
 
     const dateStr = new Date().toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })
+    
+    // YENİ EKLENEN: Başlıktan otomatik slug oluşturuluyor
+    const generatedSlug = createSlug(blogTitle)
+
     const { error } = await supabase.from('blogs').insert([
-      { title: blogTitle, excerpt: blogExcerpt, date: dateStr, image_url: finalImageUrl }
+      { 
+        title: blogTitle, 
+        excerpt: blogExcerpt, 
+        date: dateStr, 
+        image_url: finalImageUrl,
+        slug: generatedSlug // YENİ EKLENEN: Slug veritabanına gönderiliyor
+      }
     ])
 
     if (!error) {
