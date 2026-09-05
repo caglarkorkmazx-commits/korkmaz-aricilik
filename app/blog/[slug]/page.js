@@ -5,18 +5,18 @@ import Link from 'next/link'
 import { supabase } from '../../../lib/supabase'
 
 export default function BlogDetailPage() {
-  const { id } = useParams()
+  const { slug } = useParams()
   const [blog, setBlog] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchBlog = async () => {
-      const { data } = await supabase.from('blogs').select('*').eq('id', id).single()
+      const { data } = await supabase.from('blogs').select('*').eq('slug', slug).single()
       if (data) setBlog(data)
       setLoading(false)
     }
-    if (id) fetchBlog()
-  }, [id])
+    if (slug) fetchBlog()
+  }, [slug])
 
   if (loading) return <div style={{ color: '#fff', padding: '100px', textAlign: 'center' }}>İçerik yükleniyor...</div>
   if (!blog) return <div style={{ color: '#fff', padding: '100px', textAlign: 'center' }}>Yazı bulunamadı.</div>
