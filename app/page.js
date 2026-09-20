@@ -133,7 +133,7 @@ export default function Home() {
       <section style={{ padding: '60px 20px 40px', textAlign: 'center', borderBottom: '1px solid #222', overflow: 'hidden', boxSizing: 'border-box' }}>
         <div style={{ maxWidth: '850px', margin: '0 auto 40px' }}>
           <h1 className="hero-title" style={{ fontWeight: '800', marginBottom: '15px', lineHeight: '1.2', wordBreak: 'break-word' }}>
-            Islahlı Belfast Ana Arı & <br/> <span style={{ color: '#f59e0b' }}>Doğal Erzincan Yayla Balı</span>
+            Belfast Ana Arı & <br/> <span style={{ color: '#f59e0b' }}>Doğal Erzincan Yayla Balı</span>
           </h1>
           <p style={{ fontSize: '16px', color: '#aaa', lineHeight: '1.6', margin: 0 }}>
             Aydın ve Erzincan sahalarımızda sürdürdüğümüz metodik çalışmalarla <strong>Belfast ana arı yetiştiriciliği</strong> ve yüksek rakımlı yaylalardan saf <strong>Erzincan yayla balı</strong> üretimi gerçekleştiriyoruz.
