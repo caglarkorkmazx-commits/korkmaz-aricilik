@@ -75,13 +75,17 @@ export default function Header() {
       `}</style>
 
       <div className="header-container">
-        {/* Logo */}
+        {/* Logo Görseli */}
         <Link 
           href="/" 
-          style={{ fontSize: '26px', fontWeight: 'bold', color: '#f59e0b', textDecoration: 'none' }}
+          style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
           onClick={() => setIsOpen(false)}
         >
-          K<span style={{ color: '#fff', fontSize: '18px', marginLeft: '3px' }}>ORKMAZ</span>
+          <img 
+            src="/logo.png" 
+            alt="Korkmaz Arıcılık" 
+            style={{ height: '40px', width: 'auto', objectFit: 'contain' }} 
+          />
         </Link>
         
         {/* Masaüstü Navigasyon */}
