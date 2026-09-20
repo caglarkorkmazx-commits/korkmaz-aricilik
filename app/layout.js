@@ -2,13 +2,34 @@ import Header from '../components/Header'
 import Script from 'next/script'
 
 export const metadata = {
-  title: 'Korkmaz Arıcılık - Belfast Ana Arı & Bal Satışı',
-  description: 'Belfast ana arı satışı, organik doğal bal ve paket arı satın al hizmetleri.',
+  title: 'Korkmaz Arıcılık - Islahlı Belfast Ana Arı & Doğal Bal Üretimi',
+  description: 'Korkmaz Arıcılık resmi web sitesi. Aydın ve Erzincan sahalarımızda ıslahlı Belfast ana arı yetiştiriciliği ve Erzincan yayla balı üretimi.',
+  icons: {
+    icon: '/icon.png',
+    shortcut: '/icon.png',
+    apple: '/icon.png',
+  },
 }
 
 export default function RootLayout({ children }) {
+  // Google'ın markayı ve arama sonuçlarındaki logosunu algılaması için JSON-LD Şeması
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    'name': 'Korkmaz Arıcılık',
+    'url': 'https://korkmazaricilik.com',
+    'logo': 'https://korkmazaricilik.com/icon.png',
+  }
+
   return (
     <html lang="tr">
+      <head>
+        {/* Google Arama Logosu İçin Yapısal Veri */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body style={{ 
         margin: 0, 
         padding: 0, 
