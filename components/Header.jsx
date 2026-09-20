@@ -21,7 +21,7 @@ export default function Header() {
       
       <style>{`
         .header-container {
-          padding: 10px 40px; /* Dikey boşluğu büyüyen logoya göre dengeledik */
+          padding: 10px 40px;
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -46,7 +46,7 @@ export default function Header() {
 
         @media (max-width: 768px) {
           .header-container {
-            padding: 10px 20px;
+            padding: 10px 15px;
           }
           .desktop-nav {
             display: none;
@@ -70,24 +70,30 @@ export default function Header() {
             font-size: 16px;
           }
           .logo-img {
-            height: 50px !important; /* Mobilde taşma yapmaması için biraz dengeledik */
+            height: 60px !important;
+          }
+          .logo-text {
+            font-size: 16px !important;
           }
         }
       `}</style>
 
       <div className="header-container">
-        {/* Büyütülmüş Logo Görseli */}
+        {/* Büyütülmüş Logo Görseli + Yanında Okunabilir Yazı */}
         <Link 
           href="/" 
-          style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
+          style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}
           onClick={() => setIsOpen(false)}
         >
           <img 
             src="/logo.png" 
-            alt="Korkmaz Arıcılık" 
+            alt="Korkmaz Arıcılık Logo" 
             className="logo-img"
-            style={{ height: '65px', width: 'auto', objectFit: 'contain' }} 
+            style={{ height: '85px', width: 'auto', objectFit: 'contain' }} 
           />
+          <span className="logo-text" style={{ fontSize: '22px', fontWeight: '800', color: '#f59e0b', letterSpacing: '1px' }}>
+            KORKMAZ <span style={{ color: '#ffffff', fontWeight: '600' }}>ARICILIK</span>
+          </span>
         </Link>
         
         {/* Masaüstü Navigasyon */}
