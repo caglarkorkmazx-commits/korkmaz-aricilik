@@ -5,7 +5,7 @@ import { useState } from 'react'
 
 export default function Header() {
   const pathname = usePathname()
-  const [isOpen, setIsOpen] = useState(false) // Mobil menünün açık/kapalı durumu
+  const [isOpen, setIsOpen] = useState(false)
 
   const navItems = [
     { name: 'Anasayfa', href: '/' },
@@ -19,10 +19,9 @@ export default function Header() {
   return (
     <header style={{ position: 'sticky', top: 0, zIndex: 100, backgroundColor: 'rgba(18, 18, 18, 0.95)', backdropFilter: 'blur(8px)', borderBottom: '1px solid #222' }}>
       
-      {/* Mobil uyum (Responsive) için CSS kısımları */}
       <style>{`
         .header-container {
-          padding: 15px 40px;
+          padding: 10px 40px; /* Dikey boşluğu büyüyen logoya göre dengeledik */
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -45,23 +44,22 @@ export default function Header() {
           display: none;
         }
 
-        /* Ekran 768px'den küçükse (Mobil cihazlar) bu kurallar geçerli olur */
         @media (max-width: 768px) {
           .header-container {
-            padding: 15px 20px; /* Mobilde yan boşlukları daralttık */
+            padding: 10px 20px;
           }
           .desktop-nav {
-            display: none; /* Mobilde yan yana menüyü gizle */
+            display: none;
           }
           .mobile-menu-btn {
-            display: block; /* Mobilde hamburger ikonunu göster */
+            display: block;
           }
           .mobile-nav {
             display: flex;
             flex-direction: column;
             background-color: #121212;
             position: absolute;
-            top: 65px; /* Menünün hemen altından başlasın */
+            top: 75px;
             left: 0;
             width: 100%;
             border-bottom: 1px solid #222;
@@ -71,11 +69,14 @@ export default function Header() {
             border-bottom: 1px solid #222;
             font-size: 16px;
           }
+          .logo-img {
+            height: 50px !important; /* Mobilde taşma yapmaması için biraz dengeledik */
+          }
         }
       `}</style>
 
       <div className="header-container">
-        {/* Logo Görseli */}
+        {/* Büyütülmüş Logo Görseli */}
         <Link 
           href="/" 
           style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
@@ -84,7 +85,8 @@ export default function Header() {
           <img 
             src="/logo.png" 
             alt="Korkmaz Arıcılık" 
-            style={{ height: '40px', width: 'auto', objectFit: 'contain' }} 
+            className="logo-img"
+            style={{ height: '65px', width: 'auto', objectFit: 'contain' }} 
           />
         </Link>
         
@@ -115,7 +117,7 @@ export default function Header() {
         </button>
       </div>
 
-      {/* Mobil Açılır Navigasyon (Sadece buton tıklandığında görünür) */}
+      {/* Mobil Açılır Navigasyon */}
       {isOpen && (
         <nav className="mobile-nav">
           {navItems.map((item) => {
@@ -125,7 +127,7 @@ export default function Header() {
                 key={item.name}
                 href={item.href}
                 className="mobile-nav-item"
-                onClick={() => setIsOpen(false)} // Linke tıklayınca menü otomatik kapansın
+                onClick={() => setIsOpen(false)}
                 style={{
                   textDecoration: 'none',
                   color: isActive ? '#f59e0b' : '#aaa',
