@@ -21,7 +21,7 @@ export default function Header() {
       
       <style>{`
         .header-container {
-          padding: 10px 40px;
+          padding: 5px 40px;
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -29,7 +29,7 @@ export default function Header() {
         .desktop-nav {
           display: flex;
           gap: 25px;
-          font-size: 14px;
+          font-size: 15px;
           letter-spacing: 0.5px;
         }
         .mobile-menu-btn {
@@ -37,16 +37,24 @@ export default function Header() {
           background: none;
           border: none;
           color: white;
-          font-size: 24px;
+          font-size: 28px;
           cursor: pointer;
         }
         .mobile-nav {
           display: none;
         }
 
+        /* Logonun ana yüksekliği */
+        .header-logo-img {
+          height: 120px; /* İstediğiniz boyuta göre 130px, 140px yapabilirsiniz */
+          width: auto;
+          object-fit: contain;
+          transition: transform 0.2s ease;
+        }
+
         @media (max-width: 768px) {
           .header-container {
-            padding: 10px 15px;
+            padding: 5px 15px;
           }
           .desktop-nav {
             display: none;
@@ -59,7 +67,7 @@ export default function Header() {
             flex-direction: column;
             background-color: #121212;
             position: absolute;
-            top: 75px;
+            top: 100%;
             left: 0;
             width: 100%;
             border-bottom: 1px solid #222;
@@ -69,8 +77,9 @@ export default function Header() {
             border-bottom: 1px solid #222;
             font-size: 16px;
           }
-          .logo-img {
-            height: 60px !important;
+          /* Mobilde ekranı kaplamaması için boyut */
+          .header-logo-img {
+            height: 75px;
           }
           .logo-text {
             font-size: 16px !important;
@@ -79,19 +88,18 @@ export default function Header() {
       `}</style>
 
       <div className="header-container">
-        {/* Büyütülmüş Logo Görseli + Yanında Okunabilir Yazı */}
+        {/* Devasa Logo + Yanındaki Net Metin */}
         <Link 
           href="/" 
-          style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}
+          style={{ display: 'flex', alignItems: 'center', gap: '15px', textDecoration: 'none' }}
           onClick={() => setIsOpen(false)}
         >
           <img 
             src="/logo.png" 
             alt="Korkmaz Arıcılık Logo" 
-            className="logo-img"
-            style={{ height: '85px', width: 'auto', objectFit: 'contain' }} 
+            className="header-logo-img"
           />
-          <span className="logo-text" style={{ fontSize: '22px', fontWeight: '800', color: '#f59e0b', letterSpacing: '1px' }}>
+          <span className="logo-text" style={{ fontSize: '26px', fontWeight: '800', color: '#f59e0b', letterSpacing: '1px' }}>
             KORKMAZ <span style={{ color: '#ffffff', fontWeight: '600' }}>ARICILIK</span>
           </span>
         </Link>
@@ -123,7 +131,7 @@ export default function Header() {
         </button>
       </div>
 
-      {/* Mobil Açılır Navigasyon */}
+      {/* Mobil Menü */}
       {isOpen && (
         <nav className="mobile-nav">
           {navItems.map((item) => {
