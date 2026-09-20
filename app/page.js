@@ -70,15 +70,15 @@ export default function Home() {
   const schemaData = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "name": "Korkmaz Arıcılık - Belfast Ana Arı & Bal Satışı",
-    "description": "Belfast ana arı satışı, organik doğal bal, Erzincan bal satışı ve paket arı satın al hizmetleri. Aydın ve Erzincan sahalarımızla hizmetinizdeyiz.",
+    "name": "Korkmaz Arıcılık - Belfast Ana Arı & Erzincan Yayla Balı",
+    "description": "Aydın ve Erzincan sahalarımızda yürütülen Belfast ana arı yetiştiriciliği, koloni yönetimi ve yüksek rakımlı Erzincan yayla balı üretimi.",
     "telephone": "+905358468299",
     "address": {
       "@type": "PostalAddress",
       "addressLocality": "Aydın / Erzincan",
       "addressCountry": "TR"
     },
-    "keywords": "belfast ana arı satışı, organik doğal bal, erzincan bal satışı, arı satın al, damızlık ana arı, paket arı satışı"
+    "keywords": "belfast ana arı, damızlık ana arı, erzincan yayla balı, koloni yönetimi, arıcılık saha çalışmaları"
   }
 
   return (
@@ -96,7 +96,7 @@ export default function Home() {
           padding: 0;
         }
         .hero-title {
-          font-size: 46px;
+          font-size: 44px;
         }
         .slider-track {
           display: flex;
@@ -133,10 +133,10 @@ export default function Home() {
       <section style={{ padding: '60px 20px 40px', textAlign: 'center', borderBottom: '1px solid #222', overflow: 'hidden', boxSizing: 'border-box' }}>
         <div style={{ maxWidth: '850px', margin: '0 auto 40px' }}>
           <h1 className="hero-title" style={{ fontWeight: '800', marginBottom: '15px', lineHeight: '1.2', wordBreak: 'break-word' }}>
-            Belfast Ana Arı Satışı & <br/> <span style={{ color: '#f59e0b' }}>Organik Doğal Bal Üretimi</span>
+            Islahlı Belfast Ana Arı & <br/> <span style={{ color: '#f59e0b' }}>Doğal Erzincan Yayla Balı</span>
           </h1>
           <p style={{ fontSize: '16px', color: '#aaa', lineHeight: '1.6', margin: 0 }}>
-            Aydın ve Erzincan sahalarımızda yüksek verimli <strong>Belfast ana arı satışı</strong>, <strong>paket arı satın al</strong> imkanları ve katkısız <strong>Erzincan bal satışı</strong> ile Türkiye’nin her yerine güvenli gönderim sağlıyoruz.
+            Aydın ve Erzincan sahalarımızda sürdürdüğümüz metodik çalışmalarla <strong>Belfast ana arı yetiştiriciliği</strong> ve yüksek rakımlı yaylalardan saf <strong>Erzincan yayla balı</strong> üretimi gerçekleştiriyoruz.
           </p>
         </div>
 
@@ -182,7 +182,7 @@ export default function Home() {
                       overflow: 'hidden',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center',
+                      justify-content: 'center',
                       boxSizing: 'border-box'
                     }}
                   >
@@ -206,47 +206,47 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Hizmetler Önizleme */}
+      {/* Faaliyet Alanları */}
       <section style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 20px 40px', boxSizing: 'border-box' }}>
         <div style={{ marginBottom: '35px', textAlign: 'center' }}>
-          <h2 style={{ fontSize: '32px', fontWeight: 'bold', color: '#fff', marginBottom: '10px', wordBreak: 'break-word' }}>Hizmetlerimiz ve Ürünlerimiz</h2>
-          <p style={{ color: '#888', fontSize: '15px' }}>Belfast ana arı yetiştiriciliği, paket arı satışı ve Erzincan yaylalarından doğal arı ürünleri.</p>
+          <h2 style={{ fontSize: '32px', fontWeight: 'bold', color: '#fff', marginBottom: '10px', wordBreak: 'break-word' }}>Saha Faaliyetlerimiz ve Üretimimiz</h2>
+          <p style={{ color: '#888', fontSize: '15px' }}>Belfast ana arı ıslah çalışmaları, koloni yönetimi ve Erzincan flora balı üretimi.</p>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
           <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '25px', borderRadius: '12px', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
             <h3 style={{ fontSize: '18px', color: '#f59e0b', marginBottom: '15px', fontWeight: 'bold', borderBottom: '1px solid #2b2b2b', paddingBottom: '10px' }}>
-              Belfast Ana Arı Satışı
+              Belfast Ana Arı Yetiştiriciliği
             </h3>
             <p style={{ color: '#aaa', fontSize: '13px', lineHeight: '1.6', margin: 0 }}>
-              İlkbaharda Aydın-Nazilli, Antalya-Serik ve Amasya; yazın ise Erzincan Çayırlı’da yüksek performanslı <strong>Belfast ana arı satışı</strong> yapılmaktadır.
+              İlkbahar döneminde Aydın-Nazilli, Antalya-Serik ve Amasya; yaz döneminde ise Erzincan Çayırlı sahasında yüksek performanslı <strong>Belfast ana arı</strong> üretimi gerçekleştirilmektedir.
             </p>
           </div>
 
           <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '25px', borderRadius: '12px', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
             <h3 style={{ fontSize: '18px', color: '#f59e0b', marginBottom: '15px', fontWeight: 'bold', borderBottom: '1px solid #2b2b2b', paddingBottom: '10px' }}>
-              Damızlık Arı & Arı Satın Al
+              F0 Damızlık Hatlar & Koloni Yapısı
             </h3>
             <p style={{ color: '#aaa', fontSize: '13px', lineHeight: '1.6', margin: 0 }}>
-              Kolonisini güçlendirmek isteyen arıcılar için F0 damızlık hatlar ve hazır koloni çözümleri sunuyoruz.
+              Arılıklarında genetik kaliteyi yükseltmek isteyen üreticiler için F0 damızlık hat takibi ve stabil koloni altyapısı sunulmaktadır.
             </p>
           </div>
 
           <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '25px', borderRadius: '12px', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
             <h3 style={{ fontSize: '18px', color: '#f59e0b', marginBottom: '15px', fontWeight: 'bold', borderBottom: '1px solid #2b2b2b', paddingBottom: '10px' }}>
-              Paket & Kovanlı Arı Satışı
+              Kovanlı Koloni & Paket Arıcılık
             </h3>
             <p style={{ color: '#aaa', fontSize: '13px', lineHeight: '1.6', margin: 0 }}>
-              Aydın ve Amasya bölgesinde üretilen 5, 7 ve 9 çıtalı kovanlı arı veya <strong>paket arı satışı</strong> seçeneklerimiz mevcuttur.
+              Aydın ve Amasya bölge sahalarımızda gelişim takibi yapılmış 5, 7 ve 9 çıtalı kovanlı koloni hazırlıkları yürütülmektedir.
             </p>
           </div>
 
           <div style={{ backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '25px', borderRadius: '12px', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
             <h3 style={{ fontSize: '18px', color: '#f59e0b', marginBottom: '15px', fontWeight: 'bold', borderBottom: '1px solid #2b2b2b', paddingBottom: '10px' }}>
-              Erzincan Bal Satışı
+              Erzincan Yayla Balı
             </h3>
             <p style={{ color: '#aaa', fontSize: '13px', lineHeight: '1.6', margin: 0 }}>
-              Erzincan Çayırlı yüksek yaylalarından elde ettiğimiz <strong>organik doğal bal</strong> çeşitlerimizi Eylül ayı itibarıyla sunuyoruz.
+              Erzincan Çayırlı’nın zengin floraya sahip yüksek yaylalarından elde edilen katkısız yayla balı sağımı Eylül ayı itibarıyla tamamlanmaktadır.
             </p>
           </div>
         </div>
@@ -256,8 +256,8 @@ export default function Home() {
       <section style={{ maxWidth: '1200px', margin: '0 auto', padding: '60px 20px', borderTop: '1px solid #222', boxSizing: 'border-box' }}>
         <div style={{ marginBottom: '25px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '10px' }}>
           <div>
-            <h2 style={{ fontSize: '26px', fontWeight: 'bold', marginBottom: '8px', wordBreak: 'break-word' }}>Arıcılık Blog & Rehber</h2>
-            <p style={{ color: '#888', fontSize: '14px', margin: 0 }}>Belfast ana arı bakımı ve koloni yönetimi üzerine teknik notlar.</p>
+            <h2 style={{ fontSize: '26px', fontWeight: 'bold', marginBottom: '8px', wordBreak: 'break-word' }}>Teknik İncelemeler & Saha Notları</h2>
+            <p style={{ color: '#888', fontSize: '14px', margin: 0 }}>Belfast ana arı ıslahı, koloni yönetimi ve sahadaki tecrübelerimize dayalı yayınlar.</p>
           </div>
           <Link href="/blog" style={{ color: '#f59e0b', textDecoration: 'none', fontSize: '14px', fontWeight: 'bold' }}>
             Tüm Yazıları Gör &rarr;
@@ -325,23 +325,23 @@ export default function Home() {
       {/* İletişim */}
       <section style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 20px', borderTop: '1px solid #222', boxSizing: 'border-box' }}>
         <div style={{ textAlign: 'center', maxWidth: '700px', margin: '0 auto' }}>
-          <span style={{ fontSize: '12px', color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 'bold' }}>İletişim</span>
-          <h2 style={{ fontSize: '32px', fontWeight: 'bold', color: '#fff', marginTop: '8px', marginBottom: '15px', wordBreak: 'break-word' }}>Sipariş ve Bilgi Alın</h2>
-          <p style={{ color: '#888', fontSize: '15px', marginBottom: '35px' }}>Belfast ana arı satışı, paket arı siparişi ve organik Erzincan balı fiyatları için doğrudan ulaşabilirsiniz.</p>
+          <span style={{ fontSize: '12px', color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 'bold' }}>İletişim & Saha Bilgisi</span>
+          <h2 style={{ fontSize: '32px', fontWeight: 'bold', color: '#fff', marginTop: '8px', marginBottom: '15px', wordBreak: 'break-word' }}>Bizimle İletişime Geçin</h2>
+          <p style={{ color: '#888', fontSize: '15px', marginBottom: '35px' }}>Üretim süreçlerimiz, damızlık hatlarımız ve sağım dönemleri hakkında teknik detay almak için doğrudan ulaşabilirsiniz.</p>
           
           <a 
-            href="https://wa.me/905358468299?text=Merhaba,%20Belfast%20ana%20arı%20satışı,%20paket%20arı%20ve%20organik%20bal%20siparişi%20hakkında%20bilgi%20almak%20istiyorum." 
+            href="https://wa.me/905358468299?text=Merhaba,%20Belfast%20ana%20arı%20yetiştiriciliği%20ve%20saha%20faaliyetleriniz%20hakkında%20bilgi%20almak%20istiyorum." 
             target="_blank" 
             rel="noopener noreferrer" 
             style={{ display: 'inline-block', backgroundColor: '#f59e0b', color: '#000', padding: '14px 32px', borderRadius: '8px', fontWeight: 'bold', textDecoration: 'none', fontSize: '15px', maxWidth: '100%', boxSizing: 'border-box' }}
           >
-            💬 WhatsApp İle İletişime Geç
+            💬 WhatsApp İle İletişim
           </a>
         </div>
       </section>
 
       <footer style={{ textAlign: 'center', padding: '40px 20px', color: '#555', fontSize: '13px', borderTop: '1px solid #222', marginTop: '40px', boxSizing: 'border-box' }}>
-        &copy; 2026 Korkmaz Arıcılık. Tüm hakları saklıdır. | Belfast Ana Arı & Organik Bal Satışı
+        &copy; 2026 Korkmaz Arıcılık. Tüm hakları saklıdır. | Belfast Ana Arı & Erzincan Yayla Balı
       </footer>
     </div>
   )
