@@ -182,7 +182,7 @@ export default function Home() {
                       overflow: 'hidden',
                       display: 'flex',
                       alignItems: 'center',
-                      justify-content: 'center',
+                      justifyContent: 'center',
                       boxSizing: 'border-box'
                     }}
                   >
